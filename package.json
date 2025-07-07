@@ -13,9 +13,14 @@
     "dev:web": "yarn workspace @life-command/web run dev"
   },
   "devDependencies": {
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
     "eslint": "^8.0.0",
     "husky": "^9.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1"
   }
 }
