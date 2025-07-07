@@ -1,16 +1,26 @@
 "use client";
 import { useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTask, updateTaskStatus } from "./actions";
-import { createSupabaseBrowserClient } from "../lib/supabase/browser";
 import { getTasksQuery } from "./queries";
 import type { Task } from "@life-command/core-logic";
 
-function AddTaskForm() {
+interface TaskListProps {
+  createTaskAction: (formData: FormData) => Promise<void>;
+  updateTaskStatusAction: (formData: FormData) => Promise<void>;
+  supabase: ReturnType<
+    typeof import("../lib/supabase/browser").createSupabaseBrowserClient
+  >;
+}
+
+function AddTaskForm({
+  createTaskAction,
+}: {
+  createTaskAction: (formData: FormData) => Promise<void>;
+}) {
   const formRef = useRef<HTMLFormElement>(null);
 
   async function action(formData: FormData) {
-    await createTask(formData);
+    await createTaskAction(formData);
     formRef.current?.reset();
   }
 
@@ -33,8 +43,11 @@ function AddTaskForm() {
   );
 }
 
-export default function TaskList() {
-  const supabase = createSupabaseBrowserClient();
+export default function TaskList({
+  createTaskAction,
+  updateTaskStatusAction,
+  supabase,
+}: TaskListProps) {
   const queryClient = useQueryClient();
   const { data: tasks = [] } = useQuery(getTasksQuery(supabase));
 
@@ -49,7 +62,7 @@ export default function TaskList() {
       const formData = new FormData();
       formData.append("id", id);
       formData.append("completed", String(completed));
-      await updateTaskStatus(formData);
+      await updateTaskStatusAction(formData);
       return { id, completed };
     },
     onMutate: async ({ id, completed }) => {
@@ -105,7 +118,7 @@ export default function TaskList() {
           </li>
         ))}
       </ul>
-      <AddTaskForm />
+      <AddTaskForm createTaskAction={createTaskAction} />
     </div>
   );
 }

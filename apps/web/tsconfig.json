@@ -26,7 +26,7 @@
       "./node_modules/@types",
       "../../node_modules/@types"
     ],
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "include": [
     "next-env.d.ts",

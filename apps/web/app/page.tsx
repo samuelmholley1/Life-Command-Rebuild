@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import TaskList from "./TaskList";
-import { signOut } from "./actions";
+import TaskList from "./task-list";
+import { signOut, createTask, updateTaskStatus } from "./actions";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
+import { createSupabaseBrowserClient } from "../lib/supabase/browser";
 
 export default async function HomePage() {
   const supabase = createSupabaseServerClient();
@@ -32,6 +33,7 @@ export default async function HomePage() {
   }
 
   const dehydratedState = dehydrate(queryClient);
+  const browserSupabase = createSupabaseBrowserClient();
 
   return (
     <>
@@ -41,7 +43,11 @@ export default async function HomePage() {
         </button>
       </form>
       <HydrationBoundary state={dehydratedState}>
-        <TaskList />
+        <TaskList
+          createTaskAction={createTask}
+          updateTaskStatusAction={updateTaskStatus}
+          supabase={browserSupabase}
+        />
       </HydrationBoundary>
     </>
   );
