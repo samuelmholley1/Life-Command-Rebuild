@@ -1,5 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "yarn install --frozen-lockfile",
-  "rootDirectory": "apps/web"
+  "installCommand": "yarn install --frozen-lockfile"
 }
