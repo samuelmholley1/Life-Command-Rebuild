@@ -1,7 +1,21 @@
 {
-  "name": "life-command-rebuild",
+  "name": "life-command-monorepo",
+  "private": true,
   "packageManager": "yarn@4.9.2",
   "workspaces": [
+    "apps/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach --topological --parallel run build",
+    "lint": "yarn workspaces foreach --topological --parallel run lint",
+    "test": "yarn workspaces foreach --topological --parallel run test",
+    "dev:web": "yarn workspace @life-command/web run dev"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "husky": "^9.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
 }
