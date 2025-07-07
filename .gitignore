@@ -8,6 +8,13 @@
 !.yarnrc.yml
 .pnp.*
 
+# Yarn Berry
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
 # Node modules
 node_modules/
 

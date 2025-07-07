@@ -10,6 +10,13 @@
 !.yarn/releases
 !.yarn/versions
 
+# Yarn Berry
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
 # testing
 /coverage
 
