@@ -53,6 +53,6 @@ export async function signOut() {
   // Optionally, you could revalidatePath('/') here if needed
   // revalidatePath('/');
   // Redirect to login page
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.redirect ? globalThis.redirect('/login') : (await import('next/navigation')).redirect('/login');
 }
