@@ -2,12 +2,9 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '../database.types';
 
+// For Server Actions, Route Handlers, and Middleware
 export function createSupabaseServerClient() {
-  // Get the cookie store from Next.js headers
   const cookieStore = cookies();
-
-  // Pass a specially shaped object to the client that defines
-  // how to interact with the cookie store.
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -22,6 +19,26 @@ export function createSupabaseServerClient() {
         remove(name: string, options: CookieOptions) {
           cookieStore.set({ name, value: '', ...options });
         },
+      },
+    }
+  );
+}
+
+// For read-only operations in Server Components
+export function createSupabaseReadOnlyServerClient() {
+  const cookieStore = cookies();
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        // We pass empty methods for set/remove to prevent the client
+        // from ever trying to write a cookie in a read-only context.
+        set(name: string, value: string, options: CookieOptions) {},
+        remove(name: string, options: CookieOptions) {},
       },
     }
   );

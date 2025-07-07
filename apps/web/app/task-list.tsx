@@ -1,15 +1,13 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
 import type { Task } from "@life-command/core-logic";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 interface TaskListProps {
   createTaskAction: (formData: FormData) => Promise<void>;
   updateTaskStatusAction: (formData: FormData) => Promise<void>;
-  supabase: ReturnType<
-    typeof import("../lib/supabase/browser").createSupabaseBrowserClient
-  >;
 }
 
 function AddTaskForm({
@@ -46,8 +44,8 @@ function AddTaskForm({
 export default function TaskList({
   createTaskAction,
   updateTaskStatusAction,
-  supabase,
 }: TaskListProps) {
+  const [supabase] = useState(() => createSupabaseBrowserClient());
   const queryClient = useQueryClient();
   const { data: tasks = [] } = useQuery(getTasksQuery(supabase));
 

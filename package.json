@@ -13,6 +13,7 @@
     "dev:web": "yarn workspace @life-command/web run dev"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/node": "^24.0.10",
     "@types/react": "^19.1.8",
     "eslint": "^8.0.0",
