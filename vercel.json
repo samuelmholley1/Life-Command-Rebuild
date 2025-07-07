@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "yarn install --immutable --immutable-cache",
+  "buildCommand": "cd apps/web && yarn build"
+}
