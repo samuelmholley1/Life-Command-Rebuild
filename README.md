@@ -84,6 +84,15 @@ packages/
 
 ---
 
+## 🧠 Session Progress & Architecture (July 2025)
+- **AI Programmatic API:** Secure endpoint `/api/commands` for automation/AI, requires both API key and user JWT, always respects user security (RLS).
+- **Service Layer:** All business logic (task creation, update, delete, fetch) is centralized in `core-logic/taskService.ts` and reused by both UI and API for consistency and security.
+- **Vercel Build Fix:** `vercel.json` now ensures core-logic is built before the web app, matching local build order and preventing deployment errors.
+- **Testing:** All E2E and unit tests must be run in terminal. All tests pass in Chromium, Firefox, and Webkit.
+- **Docs:** All foundational docs (README, PROJECT_CONTEXT, APP_FUNCTIONALITY_OVERVIEW, COMMANDS) are now the project brain for non-coders and engineers alike.
+
+---
+
 ## 🛠️ Monorepo Command Reference (AI/Automation)
 
 ### Supported Commands (Yarn Berry Only)

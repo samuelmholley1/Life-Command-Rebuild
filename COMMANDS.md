@@ -35,6 +35,17 @@
 - If you see a command in documentation or scripts that is not listed above, it is likely incorrect for this project.
 - The only supported package manager is **Yarn Berry** (v2+), with workspaces.
 
+## Production Build (Vercel):
+  - `yarn install --immutable`
+  - `yarn workspace @life-command/core-logic build && yarn workspace @life-command/web build`
+  - (This is now enforced in vercel.json for all deployments)
+
+## AI Programmatic API
+- **Endpoint:** `/api/commands` (POST)
+- **Auth:** Requires both `x-api-key` and `Authorization: Bearer <user_jwt>`
+- **Action:** `createTask` (more actions can be added)
+- **Security:** All actions are user-scoped and respect RLS (never use service role key)
+
 ---
 
 _Last updated: July 8, 2025 - Added critical testing protocol requirements_

@@ -82,4 +82,13 @@ This document provides a high-level, non-technical summary of all major features
 
 ---
 
+## July 2025: AI API, Service Layer, and Build Reliability
+- **AI Programmatic API:** `/api/commands` endpoint for automation/AI, requires both API key and user JWT, always respects user security (RLS).
+- **Service Layer:** All business logic is centralized in `core-logic/taskService.ts` and reused by both UI and API for consistency and security.
+- **Vercel Build Fix:** `vercel.json` now ensures core-logic is built before the web app, matching local build order and preventing deployment errors.
+- **Testing:** All E2E and unit tests must be run in terminal. All tests pass in Chromium, Firefox, and Webkit.
+- **Docs:** All foundational docs are now the project brain for non-coders and engineers alike.
+
+---
+
 For more details, see the README or contact the engineering team.
