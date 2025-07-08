@@ -1,7 +1,7 @@
 {
   "name": "life-command-monorepo",
   "private": true,
-  "packageManager": "yarn@3.5.1",
+  "packageManager": "yarn@4.9.2",
   "workspaces": [
     "apps/*",
     "packages/*"

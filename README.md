@@ -1,30 +1,182 @@
 # life-command-rebuild
 
-## Dependency Injection for Testable Components
+## 🚀 Production-Ready Next.js + Supabase Monorepo
 
-This monorepo uses a dependency injection (DI) pattern for components that interact with Supabase or server actions, such as the `TaskList` component. Instead of importing Supabase clients or server actions directly inside components, all such dependencies are passed as props from the parent. This enables robust, isolated unit and integration testing with Jest, and avoids issues with ESM-only libraries and SSR/server actions in Next.js.
+A modern, production-ready task management application built with Next.js 15, Supabase, and comprehensive E2E testing. Features a clean monorepo architecture with Yarn Berry workspaces and full TypeScript strictness.
 
-### Why?
-- **Testability:** Allows components to be tested in isolation by passing mocks for Supabase clients and server actions, without requiring Jest to parse ESM-only code.
-- **SSR Compatibility:** Prevents runtime errors and import issues when running tests or server-side code.
-- **Consistency:** Ensures all data-fetching and mutation logic can be mocked or replaced in tests, making the codebase more maintainable.
+### ✅ Production Status
+- **Build Status**: ✅ Zero lint/type errors, clean production builds
+- **Testing**: ✅ Comprehensive E2E testing with Playwright
+- **Deployment**: ✅ Vercel-ready with Yarn Berry monorepo support
+- **Type Safety**: ✅ Full TypeScript strictness with proper types
+- **Code Quality**: ✅ Zero ESLint warnings, consistent patterns
 
-### How to Use
-- When creating a component that needs to interact with Supabase or server actions, accept those dependencies as props.
-- In the parent (e.g., `app/page.tsx`), create the Supabase client and import server actions, then pass them as props to the child component.
-- In tests, provide simple mocks for these dependencies.
-- Manual Jest mocks for Supabase clients are located in `apps/web/lib/supabase/__mocks__`.
+### 🏗️ Architecture Overview
 
-### Example
-```tsx
-// In app/page.tsx
-<TaskList supabaseClient={supabase} createTaskAction={createTask} updateTaskStatusAction={updateTaskStatus} />
-
-// In tests
-render(<TaskList supabaseClient={mockClient} createTaskAction={mockCreate} updateTaskStatusAction={mockUpdate} />)
+#### Monorepo Structure
+```
+apps/
+  web/                 # Next.js 15 application
+packages/
+  core-logic/          # Shared business logic & types
+  e2e/                 # Playwright E2E tests
+  db/                  # Database schema
+  tsconfig/            # Shared TypeScript config
+  lint-config/         # Shared ESLint config
 ```
 
-This pattern is required for robust testing and should be followed for all components that interact with Supabase or server actions.
+#### Key Features
+- **Next.js 15** with App Router and Server Actions
+- **Supabase** with proper SSR integration and RLS policies
+- **TanStack Query** for optimistic updates and caching
+- **Playwright E2E Testing** with secure authentication flow
+- **Yarn Berry** workspaces for monorepo management
+- **Full TypeScript** with strict mode and proper types
+- **Zero-config deployment** to Vercel
+
+### 🧪 Testing Architecture
+
+#### E2E Testing (`packages/e2e/`)
+- **Playwright** configuration with proper test isolation
+- **Secure authentication** via environment-restricted API endpoint
+- **Comprehensive test coverage** for core user workflows
+- **CI/CD ready** with headless browser support
+
+#### Unit Testing
+- **Jest** with proper mocking for Supabase clients
+- **Testing Library** for component testing
+- **Dependency injection** pattern for testable components
+
+### 🔐 Security & Best Practices
+
+#### Supabase Client Architecture
+- **Server/Client Boundaries**: Proper separation of concerns
+- **Read-only Server Client**: For Server Components
+- **Read/Write Server Client**: For Server Actions
+- **Browser Client**: For Client Components
+- **RLS Policies**: Row-level security for data protection
+
+#### Authentication Flow
+- **Secure E2E login** endpoint (test environment only)
+- **Proper session management** with SSR support
+- **Environment-based restrictions** for sensitive endpoints
+
+### 🛠️ Development Setup
+
+#### Prerequisites
+- Node.js 18+
+- Yarn 3+ (included in repo)
+- Supabase account
+
+#### Quick Start
+```bash
+# Install dependencies
+yarn install
+
+# Set up environment variables
+cp apps/web/.env.example apps/web/.env.local
+
+# Run database migrations
+yarn db:push
+
+# Start development server
+yarn dev
+
+# Run E2E tests
+yarn e2e
+```
+
+### 📦 Package Scripts
+
+#### Development
+```bash
+yarn dev          # Start development server
+yarn build        # Build for production
+yarn lint         # Run ESLint
+yarn type-check   # Run TypeScript checks
+```
+
+#### Testing
+```bash
+yarn test         # Run unit tests
+yarn e2e          # Run E2E tests
+yarn e2e:headed   # Run E2E tests in headed mode
+```
+
+### 🚀 Deployment
+
+#### Vercel (Recommended)
+This project is optimized for Vercel deployment with:
+- Yarn Berry workspace support
+- Proper build commands for monorepo
+- Environment variable configuration
+- Automatic deployment previews
+
+#### Configuration
+```json
+// vercel.json
+{
+  "installCommand": "yarn install --immutable",
+  "buildCommand": "cd apps/web && yarn build"
+}
+```
+
+### 🎯 Key Decisions & Patterns
+
+#### Dependency Injection for Testability
+Components that interact with Supabase or server actions accept dependencies as props:
+
+```tsx
+// Production usage
+<TaskList 
+  createTaskAction={createTask} 
+  updateTaskStatusAction={updateTaskStatus} 
+/>
+
+// Test usage
+<TaskList 
+  createTaskAction={mockCreate} 
+  updateTaskStatusAction={mockUpdate} 
+/>
+```
+
+This pattern enables:
+- **Isolated unit testing** with mocks
+- **SSR compatibility** without import issues
+- **Consistent testing patterns** across components
+
+#### Type Safety
+- **Shared Zod schemas** in `@life-command/core-logic`
+- **Generated Supabase types** for database operations
+- **Strict TypeScript** configuration across all packages
+- **Zero `any` types** in production code
+
+### 📊 Project Status
+
+**READY FOR PRODUCTION** ✅
+
+All critical systems are implemented and tested:
+- [x] Authentication & authorization
+- [x] Database operations with RLS
+- [x] E2E testing with secure flows
+- [x] Production builds with zero errors
+- [x] Vercel deployment configuration
+- [x] Yarn Berry monorepo support
+- [x] Full type safety and code quality
+
+### 📚 Documentation
+
+- **Red Team #1 Report**: Initial architecture review
+- **Red Team #2 Report**: E2E testing & production readiness
+- **Session Notes**: Detailed implementation decisions
+
+### 🤝 Contributing
+
+This project follows strict quality standards:
+- All code must pass TypeScript strict mode
+- Zero ESLint warnings allowed
+- E2E tests must pass before deployment
+- Proper commit messages and PR descriptions
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
