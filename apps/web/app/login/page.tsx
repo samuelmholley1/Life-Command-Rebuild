@@ -46,6 +46,13 @@ export default async function LoginPage({
         />
         <button type="submit" className="px-2 py-1 rounded-md text-white font-bold bg-blue-600 hover:bg-blue-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150">Sign In</button>
         <button formAction={signup} className="px-2 py-1 rounded-md text-white font-bold bg-green-600 hover:bg-green-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150">Sign Up</button>
+        <button
+          type="button"
+          className="px-2 py-1 rounded-md text-blue-700 font-bold border border-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
+          onClick={() => window.location.href = '/reset-password'}
+        >
+          Reset Password
+        </button>
       </form>
       {displayMessage && <p className="text-red-500 mb-4">{displayMessage}</p>}
     </div>
