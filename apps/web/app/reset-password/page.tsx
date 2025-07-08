@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { resetPasswordAction } from './actions';
 import { useFormState } from 'react-dom';
@@ -5,15 +7,21 @@ import { useFormState } from 'react-dom';
 const initialState = { message: '', status: '' };
 
 export default function ResetPasswordPage() {
-  const [state, formAction] = useFormState(async (prevState, formData) => {
-    const result = await resetPasswordAction(formData);
-    if (result?.error) {
-      return { message: result.error, status: 'error' };
-    } else if (result?.success) {
-      return { message: 'If your email is registered, a reset link has been sent.', status: 'success' };
-    }
-    return { message: '', status: '' };
-  }, initialState);
+  const [state, formAction] = useFormState(
+    async (
+      prevState: { message: string; status: string },
+      formData: FormData
+    ) => {
+      const result = await resetPasswordAction(formData);
+      if (result?.error) {
+        return { message: result.error, status: 'error' };
+      } else if (result?.success) {
+        return { message: 'If your email is registered, a reset link has been sent.', status: 'success' };
+      }
+      return { message: '', status: '' };
+    },
+    initialState
+  );
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

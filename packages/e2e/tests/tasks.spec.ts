@@ -50,6 +50,34 @@ test.describe('Task Management', () => {
     expect(preserved.length).toBeLessThanOrEqual(1);
     await expect(page.getByText(taskTitle)).not.toBeVisible();
   });
+
+  test('allows a user to edit a task title inline and persist the change', async ({ page }) => {
+    await page.goto('/');
+    const timestamp = Date.now();
+    const originalTitle = `Task to be edited - ${timestamp}`;
+    const updatedTitle = `Updated Task Title - ${timestamp}`;
+    // Create a new unique task
+    await createTask(page, originalTitle);
+    // Locate the specific task item by data-testid and text
+    const taskItem = page.getByTestId('task-item').filter({ hasText: originalTitle });
+    // Click on the task title to activate inline editing
+    await taskItem.getByText(originalTitle).click();
+    // Find the input or textarea that appears for editing
+    const editField = taskItem.locator('input, textarea');
+    await expect(editField).toBeVisible();
+    // Clear and type the new title
+    await editField.fill(updatedTitle);
+    // Press Enter to save
+    await editField.press('Enter');
+    // Assert that the old title is no longer visible
+    await expect(page.getByText(originalTitle)).not.toBeVisible();
+    // Assert that the new title is visible
+    await expect(page.getByText(updatedTitle)).toBeVisible();
+    // Reload the page
+    await page.reload();
+    // Assert that the new title is still visible after reload
+    await expect(page.getByText(updatedTitle)).toBeVisible();
+  });
 });
 
 test.describe('Task Filtering and Sorting', () => {
