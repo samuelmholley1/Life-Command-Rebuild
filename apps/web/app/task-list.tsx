@@ -133,7 +133,7 @@ export default function TaskList({
         <select
           className="ml-4 px-2 py-1 rounded-md border font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 bg-gray-200 text-gray-700 hover:bg-gray-300"
           value={sort}
-          onChange={e => setSort(e.target.value as any)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSort(e.target.value as "newest" | "oldest" | "az" | "za")}
           aria-label="Sort tasks"
         >
           <option value="newest">Newest</option>
