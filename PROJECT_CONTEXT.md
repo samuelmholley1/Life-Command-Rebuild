@@ -21,7 +21,7 @@ Building a simple "notepad" app is easy. Building a platform that can one day ma
 ## How We Have Triaged This Tension
 Our entire debugging journey was, in effect, a process of correctly managing this tension. We built a robust, scalable architecture first, and then methodically fixed the small, tactical bugs required to make a simple MVP function on top of it.
 
-We prioritized architectural correctness (E2E tests, auth providers, database migrations) even when it felt slow, because this is the foundation that ensures your Data Integrity and future scalability.
+We prioritized architectural correctness (E2E tests, auth providers, database migrations, robust selectors, centralized schemas) even when it felt slow, because this is the foundation that ensures your Data Integrity and future scalability.
 
 We are now focused on making the UI meet the Simplicity and Speed need, knowing that the powerful architecture underneath is ready to support whatever comes next.
 
@@ -32,3 +32,9 @@ Your decision to start with a professional-grade monorepo and a relational schem
 - The canonical field for marking a task as complete/incomplete is `completed` (boolean).
 - Do not use `is_completed` anywhere in the codebase, schema, or documentation.
 - All types, queries, and UI must reference `completed`.
+
+## July 2025 Architectural Progress
+- All task-related Zod schemas are now centralized in `task-schema.ts` for maintainability and clarity.
+- Inline editing for task titles is implemented with robust, attribute-based selectors and full server validation. All E2E tests pass in all browsers.
+- E2E and unit tests cover all critical flows, including inline editing and error handling.
+- Documentation and command usage are now strictly Yarn Berry workspace-based for reliability.

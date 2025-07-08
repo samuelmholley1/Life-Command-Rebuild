@@ -30,7 +30,7 @@ A modern, production-ready task management application built with Next.js 15, Su
 
 ### ✅ Production Status
 - **Build Status**: ✅ Zero lint/type errors, clean production builds
-- **Testing**: ✅ Comprehensive E2E testing with Playwright (including inline editing)
+- **Testing**: ✅ Comprehensive E2E testing with Playwright (including inline editing, robust selectors, and cross-browser reliability)
 - **Deployment**: ✅ Vercel-ready with Yarn Berry monorepo support
 - **Type Safety**: ✅ Full TypeScript strictness with proper types
 - **Code Quality**: ✅ Zero ESLint warnings, consistent patterns
@@ -43,7 +43,7 @@ apps/
   web/                 # Next.js 15 application
 packages/
   core-logic/          # Shared business logic & types (all Zod schemas centralized in task-schema.ts)
-  e2e/                 # Playwright E2E tests
+  e2e/                 # Playwright E2E tests (robust selectors, all browsers)
   db/                  # Database schema
   tsconfig/            # Shared TypeScript config
   lint-config/         # Shared ESLint config
@@ -53,16 +53,47 @@ packages/
 - **Next.js 15** with App Router and Server Actions
 - **Supabase** with proper SSR integration and RLS policies
 - **TanStack Query** for optimistic updates and caching
-- **Playwright E2E Testing** with secure authentication flow and inline editing
+- **Playwright E2E Testing** with secure authentication flow and robust, attribute-based selectors
 - **Yarn Berry** workspaces for monorepo management
 - **Full TypeScript** with strict mode and proper types
 - **Zero-config deployment** to Vercel
-- **Inline Editing:** Edit task titles inline with full server validation and instant UI refresh
+- **Inline Editing:** Edit task titles inline with full server validation and instant UI refresh (E2E tested, robust selectors)
+- **Centralized Zod Schemas:** All task-related schemas are in `task-schema.ts` for maintainability
 
 ---
 
 ## Recent Session Progress (July 8, 2025)
-- Implemented inline editing for task titles with progressive enhancement and server validation
+- Implemented robust, E2E-testable inline editing for task titles (with stable selectors and cross-browser reliability)
 - Centralized all task-related Zod schemas in `task-schema.ts` for maintainability
-- Updated E2E and unit tests to cover inline editing
+- Added server action for updating task titles with Zod validation
+- Updated E2E and unit tests to cover inline editing and ensure robust selectors (no locator staleness)
 - Cleaned up schema file structure for clarity
+- Updated documentation to reflect new features, architecture, and correct Yarn-only command usage
+- All E2E tests now pass in Chromium, Firefox, and Webkit
+
+---
+
+## 🛠️ Monorepo Command Reference (AI/Automation)
+
+### Supported Commands (Yarn Berry Only)
+- **Start Dev Server:**
+  - `yarn workspace @life-command/web dev`
+- **Build Web App:**
+  - `yarn workspace @life-command/web build`
+- **Run E2E Tests:**
+  - `yarn workspace @life-command/e2e test`
+
+### Unsupported Commands
+- Do **not** use `npm`, `npx`, or `pnpm` commands in this monorepo.
+- Do **not** use `yarn` without the `workspace` flag for app or test scripts.
+
+---
+
+## For AI/Automation
+- Always use Yarn Berry workspace commands as above.
+- All E2E tests must pass in Chromium, Firefox, and Webkit before merging.
+- Inline editing and all task flows are covered by robust, attribute-based E2E tests.
+
+---
+
+For more details, see `APP_FUNCTIONALITY_OVERVIEW.md` and `PROJECT_CONTEXT.md`.

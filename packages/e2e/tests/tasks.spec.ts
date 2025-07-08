@@ -6,7 +6,11 @@ const PRESERVED_TASK_PREFIX = '[PRESERVE]';
 const createTask = async (page: Page, title: string) => {
   await page.getByPlaceholder('New task title').fill(title);
   await page.getByRole('button', { name: /add task/i }).click();
-  await expect(page.getByText(title)).toBeVisible();
+  // Wait for the new task item to appear and get its id (robust for Firefox)
+  const taskItem = await page.locator('[data-testid="task-item"]').filter({ hasText: title }).first();
+  await expect(taskItem).toBeVisible({ timeout: 10000 }); // Ensure visibility before getting attribute
+  const taskId = await taskItem.getAttribute('data-task-id');
+  return taskId;
 };
 
 // Helper to filter out preserved tasks from a list of task items
@@ -22,12 +26,9 @@ test('Core Task Management Flow', async ({ page }) => {
 
   // Fill in the new task title
   const taskTitle = `My First E2E Task - ${Date.now()}`;
-  await page.getByPlaceholder('New task title').fill(taskTitle);
-
-  // Click the 'Add Task' button
-  await page.getByRole('button', { name: /add task/i }).click();
-
+  const taskId = await createTask(page, taskTitle);
   // Assert the new task appears in the document
+  await expect(page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]')).toBeVisible();
   await expect(page.getByText(taskTitle)).toBeVisible();
 });
 
@@ -56,19 +57,19 @@ test.describe('Task Management', () => {
     const timestamp = Date.now();
     const originalTitle = `Task to be edited - ${timestamp}`;
     const updatedTitle = `Updated Task Title - ${timestamp}`;
-    // Create a new unique task
-    await createTask(page, originalTitle);
-    // Locate the specific task item by data-testid and text
-    const taskItem = page.getByTestId('task-item').filter({ hasText: originalTitle });
-    // Click on the task title to activate inline editing
-    await taskItem.getByText(originalTitle).click();
-    // Find the input or textarea that appears for editing
-    const editField = taskItem.locator('input, textarea');
-    await expect(editField).toBeVisible();
+    // Create a new unique task and get its id
+    const taskId = await createTask(page, originalTitle);
+    // Locate the specific task item by stable data-task-id
+    const taskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    // Click the task title span to activate inline editing
+    await taskItem.locator('span').click();
+    // Find the input for editing by test id and data-task-id
+    const editInput = page.locator('input[data-testid="edit-title-input"][data-task-id="' + taskId + '"]');
+    await expect(editInput).toBeVisible();
     // Clear and type the new title
-    await editField.fill(updatedTitle);
+    await editInput.fill(updatedTitle);
     // Press Enter to save
-    await editField.press('Enter');
+    await editInput.press('Enter');
     // Assert that the old title is no longer visible
     await expect(page.getByText(originalTitle)).not.toBeVisible();
     // Assert that the new title is visible

@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
 import type { Task } from "@life-command/core-logic";
@@ -59,6 +59,13 @@ export default function TaskList({
   const [sort, setSort] = useState<'newest' | 'oldest' | 'az' | 'za'>('newest');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string>('');
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingId && editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editingId]);
 
   // Apply filter
   const filteredTasks = tasks.filter((task: Task) => {
@@ -152,6 +159,7 @@ export default function TaskList({
             key={task.id}
             className="py-1 border-b last:border-b-0 flex items-center gap-2"
             data-testid="task-item"
+            data-task-id={task.id}
           >
             <form
               className="flex items-center gap-2 w-full"
@@ -178,7 +186,9 @@ export default function TaskList({
               />
               {editingId === task.id ? (
                 <input
+                  ref={editInputRef}
                   data-testid="edit-title-input"
+                  data-task-id={task.id}
                   name="title"
                   value={editingTitle}
                   onChange={e => setEditingTitle(e.target.value)}
@@ -199,7 +209,6 @@ export default function TaskList({
                       setEditingId(null);
                     }
                   }}
-                  autoFocus
                 />
               ) : (
                 <span

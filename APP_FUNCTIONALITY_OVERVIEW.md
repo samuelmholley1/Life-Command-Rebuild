@@ -17,7 +17,7 @@ This document provides a high-level, non-technical summary of all major features
 
 ### 2. Task Management
 - **Create Task:** Users can add new tasks with a title and status.
-- **Edit Task Title:** Users can edit a task's title inline. Edits are validated and persisted server-side, with instant UI refresh.
+- **Edit Task Title (Inline):** Users can edit a task's title directly in the list. Edits are validated and persisted server-side, with instant UI refresh. Inline editing is robustly E2E tested with stable selectors and works in all browsers.
 - **Complete Task:** Mark tasks as completed or active.
 - **Delete Task:** Remove tasks securely (with user validation).
 - **Filter Tasks:** View all, active, or completed tasks.
@@ -30,7 +30,7 @@ This document provides a high-level, non-technical summary of all major features
 - **Environment Separation:** Test and production data are strictly separated.
 
 ### 4. Testing & Quality
-- **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing).
+- **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing). All selectors are robust and attribute-based to prevent locator staleness. All tests pass in Chromium, Firefox, and Webkit.
 - **Unit Testing:** All business logic and UI components are unit tested, including inline editing.
 - **Manual QA:** Password reset and other flows that require email are manually tested.
 - **Zero Tolerance for Errors:** No known lint, type, or runtime errors in production.
@@ -44,7 +44,7 @@ This document provides a high-level, non-technical summary of all major features
 
 ## User Flows
 
-1. **Sign Up → Confirm Email → Sign In → Create/Manage Tasks (including Edit Title) → Sign Out**
+1. **Sign Up → Confirm Email → Sign In → Create/Manage Tasks (including Edit Title Inline) → Sign Out**
 2. **Forgot Password → Request Reset Link → Receive Email → Set New Password → Sign In**
 3. **E2E Test User:** Used only for automated tests, never for real data.
 
@@ -56,7 +56,7 @@ This document provides a high-level, non-technical summary of all major features
 - Password reset is not E2E tested (requires email inbox), but is covered by manual QA and documented.
 - Preserved test data policy ensures one historical task is always present for audit/auditability.
 - All task-related Zod schemas are now centralized in `task-schema.ts` for maintainability and clarity.
-- Inline editing is implemented with progressive enhancement and full server validation.
+- Inline editing is implemented with progressive enhancement, robust selectors, and full server validation. All E2E tests pass in all browsers.
 
 ---
 
