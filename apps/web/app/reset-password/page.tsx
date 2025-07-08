@@ -1,13 +1,25 @@
 import React from 'react';
+import { resetPasswordAction } from './actions';
+import { useFormState } from 'react-dom';
+
+const initialState = { message: '', status: '' };
 
 export default function ResetPasswordPage() {
-  // This page should be wired to your Supabase password reset flow.
-  // For now, it just displays a placeholder message.
+  const [state, formAction] = useFormState(async (prevState, formData) => {
+    const result = await resetPasswordAction(formData);
+    if (result?.error) {
+      return { message: result.error, status: 'error' };
+    } else if (result?.success) {
+      return { message: 'If your email is registered, a reset link has been sent.', status: 'success' };
+    }
+    return { message: '', status: '' };
+  }, initialState);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Reset Password</h1>
       <p className="mb-4">Enter your email address and we will send you a password reset link.</p>
-      <form className="flex flex-col gap-2 w-80">
+      <form action={formAction} className="flex flex-col gap-2 w-80">
         <input
           type="email"
           name="email"
@@ -22,6 +34,9 @@ export default function ResetPasswordPage() {
           Send Reset Link
         </button>
       </form>
+      {state.message && (
+        <p className={state.status === 'error' ? 'text-red-500 mt-4' : 'text-green-600 mt-4'}>{state.message}</p>
+      )}
     </div>
   );
 }
