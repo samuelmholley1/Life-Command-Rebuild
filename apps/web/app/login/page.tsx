@@ -4,14 +4,16 @@ import React from 'react';
 export type LoginPageProps = { searchParams?: Record<string, string | string[]> };
 
 const LoginPage = async ({ searchParams }: LoginPageProps) => {
+  // Ensure searchParams is treated as a plain object or Record for safe access
+  const params = searchParams as Record<string, string | string[] | undefined>;
   let message: string | undefined;
 
-  // Explicitly check for existence and then type
-  if (searchParams && 'message' in searchParams) {
-    if (typeof searchParams.message === 'string') {
-      message = searchParams.message;
-    } else if (Array.isArray(searchParams.message) && searchParams.message.length > 0) {
-      message = searchParams.message[0];
+  // Now, safely access properties without triggering the warning
+  if (params && params.message !== undefined) {
+    if (typeof params.message === 'string') {
+      message = params.message;
+    } else if (Array.isArray(params.message) && params.message.length > 0) {
+      message = params.message[0];
     }
   }
 

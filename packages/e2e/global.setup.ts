@@ -27,31 +27,46 @@ async function globalSetup(config: FullConfig) {
     throw new Error(`E2E login failed via API route: ${response.status()}`);
   }
 
-  // Parse tokens from response
-  const { accessToken, refreshToken, user } = await response.json();
+  // Parse tokens and user from response
+  const { session, user: sessionUser } = await response.json(); // Destructure session and user
+
+  if (!session || !sessionUser) {
+    throw new Error('E2E login API did not return session or user data.');
+  }
+
+  // Assign accessToken and refreshToken from the session object
+  const accessToken = session.access_token;
+  const refreshToken = session.refresh_token;
 
   // Save the authenticated state (cookies) from the page's context
   await page.context().storageState({ path: storageState as string });
 
   // Clean up all tasks for the authenticated user
-  if (accessToken && user?.id) {
+  if (accessToken) {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { global: { headers: { Authorization: `Bearer ${accessToken}` } } }
     );
+    // Use supabase.auth.getUser() to confirm the user context
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+    if (getUserError || !user) {
+      console.error('E2E global setup: Failed to retrieve user for cleanup:', getUserError?.message);
+      throw new Error('E2E global setup: Could not retrieve test user for database cleanup.');
+    }
+    console.log(`E2E global setup: Retrieved user ID for cleanup: ${user.id}`); // Debug log
     try {
-      const { error } = await supabase.from('tasks').delete().eq('user_id', user.id);
-      if (error) {
-        console.error('E2E global setup: Failed to delete tasks for test user:', error.message);
+      const { error: deleteError } = await supabase.from('tasks').delete().eq('user_id', user.id);
+      if (deleteError) {
+        console.error(`E2E global setup: Failed to delete tasks for user ${user.id}:`, deleteError.message);
       } else {
-        console.log('E2E global setup: Successfully deleted all tasks for test user.');
+        console.log(`E2E global setup: Successfully deleted all tasks for user ${user.id}.`);
       }
-    } catch (err) {
-      console.error('E2E global setup: Exception during task cleanup:', err);
+    } catch (err: any) {
+      console.error(`E2E global setup: Error during task deletion for user ${user.id}:`, err.message);
     }
   } else {
-    console.warn('E2E global setup: Could not clean up tasks, missing accessToken or user.id');
+    console.warn('E2E global setup: Could not clean up tasks, missing accessToken');
   }
 
   // Close the browser instance

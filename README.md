@@ -352,3 +352,16 @@ Previously, E2E tests were writing to the production Supabase database due to en
 - All contributors must use the correct variable names and Playwright config for safe testing.
 
 ---
+
+## 🧪 E2E Testing & Debugging (July 7, 2025)
+
+- Successfully debugged environment variable issues and E2E task deletion failures.
+- The E2E authentication flow now returns a Supabase session and user object, ensuring reliable test cleanup.
+- **Definitive test command:**
+
+```bash
+yarn e2e
+```
+
+- All agents and contributors must run tests using the above terminal command. Do not run test files independently.
+- Test user: `samuelmholley@gmail.com` is currently used for E2E authentication. This is a real email and may be unideal for long-term use—consider switching to a dedicated test account in the future.

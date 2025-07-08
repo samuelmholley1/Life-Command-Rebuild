@@ -12,11 +12,17 @@ export async function POST(request: Request) {
   }
 
   const supabase = createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 401 });
   }
 
-  return NextResponse.json({ success: true }, { status: 200 });
+  // Return session and user on success
+  const { session, user } = data;
+  if (!session || !user) {
+    return NextResponse.json({ error: 'Login successful but session data missing.' }, { status: 500 });
+  }
+
+  return NextResponse.json({ session, user }, { status: 200 });
 }

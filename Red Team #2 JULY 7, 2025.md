@@ -249,3 +249,16 @@ The application is ready for:
 - Documented the fix in the project README for all contributors.
 
 ---
+
+## 🧪 July 7, 2025: E2E Environment & Task Deletion Debugging
+
+- Debugged and resolved issues with environment variable loading and E2E task cleanup logic.
+- `/api/e2e-login` now returns Supabase session and user, enabling reliable authenticated cleanup in tests.
+- **Definitive test command:**
+
+```bash
+yarn e2e
+```
+
+- All agents must use the above terminal command to run tests. Do not run test files directly or independently.
+- Note: The E2E test user is currently `samuelmholley@gmail.com` (real email). For long-term security, migrate to a dedicated test account.
