@@ -4,6 +4,5 @@
       "src": "apps/web/next.config.js",
       "use": "@vercel/next"
     }
-  ],
-  "_copilotRedeployTrigger": "2025-07-07"
+  ]
 }
