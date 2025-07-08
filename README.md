@@ -455,3 +455,20 @@ To balance clean E2E test runs with the need for persistent test data (for audit
   - If you see a task with `[PRESERVE]` in the title, do not delete or modify it. It is required for automated testing and system health checks.
 - **Commit & Push:**
   - All changes, fixes, and documentation from this session are committed and pushed to the repository.
+
+---
+
+# July 8, 2025: Password Reset Flow, Navigation Standardization, and Auth UI Consistency
+
+- **Reset Password Feature:**
+  - Added a dedicated `/reset-password` page with a form for users to request a password reset link via email.
+  - The reset password form is styled consistently with all other auth forms and buttons.
+  - The reset password navigation is now a Next.js `<Link>` styled as a button, fully compatible with server components and visually consistent.
+  - All navigation actions in server components now use `<Link>` instead of `<button onClick={...}>` to avoid server component errors and follow Next.js best practices.
+- **No E2E Test for Reset Password:**
+  - Per project policy, the password reset flow is not E2E tested, as it relies on Supabase’s email system and the E2E user’s password is managed in `.env`.
+  - Manual QA is recommended for the reset password flow after deployment or auth changes.
+  - This decision is documented for future contributors and red team reviews.
+- **Documentation Updated:**
+  - README and session log updated to reflect the new password reset feature, navigation standardization, and rationale for E2E coverage.
+  - All changes are committed and pushed.
