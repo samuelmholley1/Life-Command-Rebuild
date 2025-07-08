@@ -34,7 +34,24 @@ Your decision to start with a professional-grade monorepo and a relational schem
 - All types, queries, and UI must reference `completed`.
 
 ## July 2025 Architectural Progress
+### Major UI/UX Enhancement (July 8, 2025)
+- Implemented comprehensive UI/UX enhancement pass with modern design system
+- Established consistent visual language using Tailwind CSS with proper spacing, colors, and typography
+- Enhanced task management interface with card-based layouts, improved controls, and clear visual hierarchy
+- Added proper accessibility features including focus states, semantic HTML, and proper contrast
+- Implemented responsive design with centered content layout for optimal user experience
+- All UI improvements validated through comprehensive E2E and unit test suites
+
+### Core Architecture (Earlier July 2025)
 - All task-related Zod schemas are now centralized in `task-schema.ts` for maintainability and clarity.
 - Inline editing for task titles is implemented with robust, attribute-based selectors and full server validation. All E2E tests pass in all browsers.
 - E2E and unit tests cover all critical flows, including inline editing and error handling.
 - Documentation and command usage are now strictly Yarn Berry workspace-based for reliability.
+- **CRITICAL TESTING PROTOCOL:** All tests must be run in terminal for proper observation and debugging.
+
+## Development Guidelines
+### Testing Protocol
+- **ALWAYS run tests in terminal:** `cd packages/e2e && npm test` for E2E, `cd apps/web && npm test` for unit tests
+- **NO VS Code test runners:** Terminal-only testing ensures proper observation and reliable results
+- **Cross-browser validation:** All E2E tests must pass in Chromium, Firefox, and Webkit
+- **UI validation:** All visual changes must be validated through both E2E and unit test suites

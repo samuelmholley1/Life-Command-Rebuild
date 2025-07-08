@@ -25,17 +25,17 @@ function AddTaskForm({
   }
 
   return (
-    <form ref={formRef} action={action} className="flex gap-2 mt-4">
+    <form ref={formRef} action={action} className="flex gap-2 mb-6">
       <input
         type="text"
         name="title"
         placeholder="New task title"
         required
-        className="border rounded px-3 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
+        className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
       <button
         type="submit"
-        className="px-2 py-1 rounded-md text-white font-bold bg-blue-500 hover:bg-blue-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
+        className="px-4 py-2 rounded-md text-white font-bold bg-blue-500 hover:bg-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150"
       >
         Add Task
       </button>
@@ -118,116 +118,127 @@ export default function TaskList({
   return (
     <div>
       {/* Filter Controls */}
-      <div className="flex gap-2 mb-2">
+      <div className="flex flex-wrap items-center gap-2 mb-6 p-4 bg-white rounded-lg shadow-sm">
+        <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
         <button
-          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('all')}
           type="button"
         >
           All
         </button>
         <button
-          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('active')}
           type="button"
         >
           Active
         </button>
         <button
-          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('completed')}
           type="button"
         >
           Completed
         </button>
         {/* Sorting Controls */}
-        <select
-          className="ml-4 px-2 py-1 rounded-md border font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 bg-gray-200 text-gray-700 hover:bg-gray-300"
-          value={sort}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSort(e.target.value as "newest" | "oldest" | "az" | "za")}
-          aria-label="Sort tasks"
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="az">A-Z</option>
-          <option value="za">Z-A</option>
-        </select>
-      </div>
-      <ul className="mb-4">
-        {sortedTasks.map((task: Task) => (
-          <li
-            key={task.id}
-            className="py-1 border-b last:border-b-0 flex items-center gap-2"
-            data-testid="task-item"
-            data-task-id={task.id}
+        <div className="ml-4 flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-700">Sort:</span>
+          <select
+            className="px-3 py-2 rounded-md border border-gray-300 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 hover:bg-gray-50"
+            value={sort}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSort(e.target.value as "newest" | "oldest" | "az" | "za")}
+            aria-label="Sort tasks"
           >
-            <form
-              className="flex items-center gap-2 w-full"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                if (editingId === task.id && updateTaskTitleAction) {
-                  const formData = new FormData(e.currentTarget);
-                  await updateTaskTitleAction(formData);
-                  setEditingId(null);
-                }
-              }}
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+          </select>
+        </div>
+      </div>
+      <div className="space-y-2 mb-6">
+        {sortedTasks.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <p>No tasks found. Add your first task below!</p>
+          </div>
+        ) : (
+          sortedTasks.map((task: Task) => (
+            <div
+              key={task.id}
+              className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
+              data-testid="task-item"
+              data-task-id={task.id}
             >
-              <input type="hidden" name="id" value={task.id} />
-              <input
-                type="checkbox"
-                name="completed"
-                checked={task.completed}
-                onChange={(e) => {
-                  mutation.mutate({
-                    id: task.id,
-                    completed: e.currentTarget.checked,
-                  });
-                }}
-              />
-              {editingId === task.id ? (
-                <input
-                  ref={editInputRef}
-                  data-testid="edit-title-input"
-                  data-task-id={task.id}
-                  name="title"
-                  value={editingTitle}
-                  onChange={e => setEditingTitle(e.target.value)}
-                  onBlur={async (e) => {
-                    if (updateTaskTitleAction) {
-                      const formData = new FormData(e.currentTarget.form!);
-                      await updateTaskTitleAction(formData);
-                    }
+              <form
+                className="flex items-center gap-3 flex-1"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (editingId === task.id && updateTaskTitleAction) {
+                    const formData = new FormData(e.currentTarget);
+                    await updateTaskTitleAction(formData);
                     setEditingId(null);
+                  }
+                }}
+              >
+                <input type="hidden" name="id" value={task.id} />
+                <input
+                  type="checkbox"
+                  name="completed"
+                  checked={task.completed}
+                  onChange={(e) => {
+                    mutation.mutate({
+                      id: task.id,
+                      completed: e.currentTarget.checked,
+                    });
                   }}
-                  onKeyDown={async (e) => {
-                    if (e.key === 'Enter' && updateTaskTitleAction) {
-                      const form = (e.target as HTMLInputElement).form;
-                      if (form) {
-                        const formData = new FormData(form);
+                  className="w-4 h-4 text-blue-500 rounded focus:ring-blue-500"
+                />
+                {editingId === task.id ? (
+                  <input
+                    ref={editInputRef}
+                    data-testid="edit-title-input"
+                    data-task-id={task.id}
+                    name="title"
+                    value={editingTitle}
+                    onChange={e => setEditingTitle(e.target.value)}
+                    onBlur={async (e) => {
+                      if (updateTaskTitleAction) {
+                        const formData = new FormData(e.currentTarget.form!);
                         await updateTaskTitleAction(formData);
                       }
                       setEditingId(null);
-                    }
-                  }}
-                />
-              ) : (
-                <span
-                  className={task.completed ? "line-through text-gray-400" : ""}
-                  data-testid="task-title"
-                  onClick={() => {
-                    setEditingId(task.id);
-                    setEditingTitle(task.title);
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {task.title}
-                </span>
-              )}
+                    }}
+                    onKeyDown={async (e) => {
+                      if (e.key === 'Enter' && updateTaskTitleAction) {
+                        const form = (e.target as HTMLInputElement).form;
+                        if (form) {
+                          const formData = new FormData(form);
+                          await updateTaskTitleAction(formData);
+                        }
+                        setEditingId(null);
+                      }
+                    }}
+                    className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                ) : (
+                  <span
+                    className={`flex-1 cursor-pointer ${task.completed ? "line-through text-gray-400" : "text-gray-800"}`}
+                    data-testid="task-title"
+                    onClick={() => {
+                      setEditingId(task.id);
+                      setEditingTitle(task.title);
+                    }}
+                  >
+                    {task.title}
+                  </span>
+                )}
+              </form>
               <button
                 type="button"
                 data-testid={`delete-task-${task.id}`}
                 aria-label="Delete"
-                className="px-2 py-1 rounded-md text-white font-bold bg-red-500 hover:bg-red-700 ml-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
+                className="px-3 py-1 rounded-md text-white font-medium bg-red-500 hover:bg-red-600 ml-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-150"
                 onClick={() => {
                   const formData = new FormData();
                   formData.append('id', task.id);
@@ -236,10 +247,10 @@ export default function TaskList({
               >
                 Delete
               </button>
-            </form>
-          </li>
-        ))}
-      </ul>
+            </div>
+          ))
+        )}
+      </div>
       <AddTaskForm createTaskAction={createTaskAction} />
     </div>
   );

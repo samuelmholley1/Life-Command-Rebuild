@@ -35,23 +35,31 @@ export default async function HomePage() {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <>
-      <form action={signOut} className="mb-6">
-        <button
-          type="submit"
-          className="px-2 py-1 rounded-md text-white font-bold bg-gray-500 hover:bg-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
-        >
-          Sign Out
-        </button>
-      </form>
-      <HydrationBoundary state={dehydratedState}>
-        <TaskList
-          createTaskAction={createTask}
-          updateTaskStatusAction={updateTaskStatus}
-          deleteTaskAction={deleteTask}
-          updateTaskTitleAction={updateTaskTitle}
-        />
-      </HydrationBoundary>
-    </>
+    <div className="min-h-screen">
+      {/* Header with Sign Out */}
+      <header className="mb-8 flex justify-between items-center py-4 border-b border-gray-200">
+        <h1 className="text-2xl font-bold text-gray-800">Life Command</h1>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-md text-white font-bold bg-gray-600 hover:bg-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-150"
+          >
+            Sign Out
+          </button>
+        </form>
+      </header>
+      
+      {/* Main Content */}
+      <main>
+        <HydrationBoundary state={dehydratedState}>
+          <TaskList
+            createTaskAction={createTask}
+            updateTaskStatusAction={updateTaskStatus}
+            deleteTaskAction={deleteTask}
+            updateTaskTitleAction={updateTaskTitle}
+          />
+        </HydrationBoundary>
+      </main>
+    </div>
   );
 }

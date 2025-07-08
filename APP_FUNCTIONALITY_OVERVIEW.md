@@ -16,24 +16,34 @@ This document provides a high-level, non-technical summary of all major features
 - **Test User:** Dedicated E2E test user for automated testing (not used in production).
 
 ### 2. Task Management
-- **Create Task:** Users can add new tasks with a title and status.
+- **Create Task:** Users can add new tasks with a title and status using a clean, modern input form.
 - **Edit Task Title (Inline):** Users can edit a task's title directly in the list. Edits are validated and persisted server-side, with instant UI refresh. Inline editing is robustly E2E tested with stable selectors and works in all browsers.
-- **Complete Task:** Mark tasks as completed or active.
-- **Delete Task:** Remove tasks securely (with user validation).
-- **Filter Tasks:** View all, active, or completed tasks.
-- **Sort Tasks:** Sort tasks by creation date or status.
+- **Complete Task:** Mark tasks as completed or active with improved checkbox styling.
+- **Delete Task:** Remove tasks securely (with user validation) using clearly styled delete buttons.
+- **Filter Tasks:** View all, active, or completed tasks using visually distinct filter buttons with active state indicators.
+- **Sort Tasks:** Sort tasks by creation date or alphabetical order using an accessible dropdown.
+- **Task Display:** Each task is presented in a clean card layout with proper spacing, shadows, and hover effects.
 - **Preserved Task:** One historical test task is always present for auditability/testing (never deleted).
 
-### 3. Data Security & Privacy
+### 3. User Interface & Experience
+- **Modern Design System:** Consistent visual language using Tailwind CSS with proper spacing, colors, and typography.
+- **Responsive Layout:** Central content column (max-width) with proper padding for optimal reading on all screen sizes.
+- **Clear Visual Hierarchy:** Proper heading structure, grouped controls, and intuitive button styling.
+- **Accessibility:** Focus states, proper contrast ratios, and semantic HTML throughout.
+- **Empty States:** Helpful messaging when no tasks match current filters.
+- **Interactive Feedback:** Hover effects, transitions, and clear visual feedback for all user actions.
+
+### 4. Data Security & Privacy
 - **Row-Level Security (RLS):** All data is protected at the database level; users can only access their own tasks.
 - **No Sensitive Data in Errors:** All user-facing errors are actionable and never leak backend details.
 - **Environment Separation:** Test and production data are strictly separated.
 
 ### 4. Testing & Quality
-- **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing). All selectors are robust and attribute-based to prevent locator staleness. All tests pass in Chromium, Firefox, and Webkit.
-- **Unit Testing:** All business logic and UI components are unit tested, including inline editing.
+- **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing). All selectors are robust and attribute-based to prevent locator staleness. All tests pass in Chromium, Firefox, and Webkit. **CRITICAL: Always run tests in terminal for proper observation.**
+- **Unit Testing:** All business logic and UI components are unit tested, including inline editing. **CRITICAL: Always run tests in terminal for proper observation.**
 - **Manual QA:** Password reset and other flows that require email are manually tested.
 - **Zero Tolerance for Errors:** No known lint, type, or runtime errors in production.
+- **UI/UX Testing:** All visual improvements validated through comprehensive test suites.
 
 ### 5. Deployment & Operations
 - **Vercel Deployment:** Zero-config, production-ready deployment pipeline.
@@ -57,6 +67,8 @@ This document provides a high-level, non-technical summary of all major features
 - Preserved test data policy ensures one historical task is always present for audit/auditability.
 - All task-related Zod schemas are now centralized in `task-schema.ts` for maintainability and clarity.
 - Inline editing is implemented with progressive enhancement, robust selectors, and full server validation. All E2E tests pass in all browsers.
+- **UI/UX Standards:** Modern design system with consistent spacing, colors, and typography using Tailwind CSS. All interactive elements follow accessibility guidelines with proper focus states and visual feedback.
+- **Testing Protocol:** All tests must be run in terminal for proper observation and debugging. No VS Code test runners allowed for reliability.
 
 ---
 

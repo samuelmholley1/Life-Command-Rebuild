@@ -63,6 +63,17 @@ packages/
 ---
 
 ## Recent Session Progress (July 8, 2025)
+### Major UI/UX Enhancement Pass
+- **Comprehensive UI/UX Enhancement:** Implemented modern, consistent visual design across all components
+  - Global layout with centered content (max-w-4xl), improved typography, and subtle background
+  - Enhanced task item styling with cards, shadows, and improved spacing
+  - Consistent input field styling with proper focus states and borders
+  - Improved button styling with consistent sizing and hover states
+  - Better filter controls with grouped layout and clear visual hierarchy
+  - Added proper header section with app title and sign-out functionality
+  - Implemented empty state messaging for better user experience
+
+### Previous Work (Earlier July 8, 2025)
 - Implemented robust, E2E-testable inline editing for task titles (with stable selectors and cross-browser reliability)
 - Centralized all task-related Zod schemas in `task-schema.ts` for maintainability
 - Added server action for updating task titles with Zod validation
@@ -80,12 +91,21 @@ packages/
   - `yarn workspace @life-command/web dev`
 - **Build Web App:**
   - `yarn workspace @life-command/web build`
-- **Run E2E Tests:**
-  - `yarn workspace @life-command/e2e test`
+- **Run E2E Tests (ALWAYS USE TERMINAL):**
+  - `cd packages/e2e && npm test`
+- **Run Unit Tests (ALWAYS USE TERMINAL):**
+  - `cd apps/web && npm test`
+
+### Testing Guidelines
+- **CRITICAL:** Always run tests in terminal for proper observation and debugging
+- All E2E tests must pass in Chromium, Firefox, and Webkit before merging
+- UI changes must be validated with both E2E and unit tests
+- Tests include comprehensive coverage of inline editing, filtering, sorting, and all task flows
 
 ### Unsupported Commands
-- Do **not** use `npm`, `npx`, or `pnpm` commands in this monorepo.
-- Do **not** use `yarn` without the `workspace` flag for app or test scripts.
+- Do **not** use `npm`, `npx`, or `pnpm` commands in this monorepo except for running tests.
+- Do **not** use `yarn` without the `workspace` flag for app scripts.
+- Do **not** use VS Code test runners - always run tests in terminal for proper observation.
 
 ---
 
