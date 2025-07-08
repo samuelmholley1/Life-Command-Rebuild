@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   if (!code) {
-    redirect('/login?error=Missing+code');
+    redirect('/login?message=Missing+code');
   }
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   );
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/login?message=${encodeURIComponent(error.message)}`);
   }
   redirect('/');
 }
