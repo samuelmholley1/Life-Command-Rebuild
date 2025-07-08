@@ -261,7 +261,7 @@ yarn e2e
 ```
 
 - All agents must use the above terminal command to run tests. Do not run test files directly or independently.
-- Note: The E2E test user is currently `samuelmholley@gmail.com` (real email). For long-term security, migrate to a dedicated test account.
+- Note: The E2E test user is now `e2e-test-user@mailinator.com` (dedicated test email). For long-term security, always use a dedicated test account, never a real personal email.
 
 ---
 
