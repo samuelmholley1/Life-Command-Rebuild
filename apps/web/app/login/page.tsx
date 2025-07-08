@@ -1,7 +1,9 @@
 import { login, signup } from './actions';
+import React from 'react';
 
-// The component now correctly receives searchParams as a prop
-export default function LoginPage({ searchParams }: { searchParams?: Record<string, string | string[]> }) {
+export type LoginPageProps = { searchParams?: Record<string, string | string[]> };
+
+const LoginPage: React.FC<LoginPageProps> = ({ searchParams }) => {
   const message = typeof searchParams?.message === 'string' ? searchParams.message : Array.isArray(searchParams?.message) ? searchParams.message[0] : undefined;
 
   return (
@@ -29,4 +31,6 @@ export default function LoginPage({ searchParams }: { searchParams?: Record<stri
       {message && <p>{message}</p>}
     </div>
   );
-}
+};
+
+export default LoginPage;
