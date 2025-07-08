@@ -1,6 +1,6 @@
 # life-command-rebuild
 
-[➡️ Project Context: MVP Speed vs. "Everything App" Architecture](./PROJECT_CONTEXT.md)
+[➡️ Project Context: CORE PROJECT TENSION ➡️ MVP Speed vs. "Everything App" Architecture](./PROJECT_CONTEXT.md)
 
 ## 🚀 Production-Ready Next.js + Supabase Monorepo
 
