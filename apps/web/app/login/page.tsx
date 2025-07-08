@@ -34,8 +34,8 @@ export default async function LoginPage({
           required
           className="border rounded px-3 py-2"
         />
-        <button type="submit" className="bg-blue-600 text-white rounded px-3 py-2">Sign In</button>
-        <button formAction={signup} className="bg-green-600 text-white rounded px-3 py-2">Sign Up</button>
+        <button type="submit" className="px-2 py-1 rounded-md text-white font-bold bg-blue-600 hover:bg-blue-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150">Sign In</button>
+        <button formAction={signup} className="px-2 py-1 rounded-md text-white font-bold bg-green-600 hover:bg-green-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150">Sign Up</button>
       </form>
       {displayMessage && <p className="text-red-500 mb-4">{displayMessage}</p>}
     </div>

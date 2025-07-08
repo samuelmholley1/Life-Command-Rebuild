@@ -26,3 +26,9 @@ We prioritized architectural correctness (E2E tests, auth providers, database mi
 We are now focused on making the UI meet the Simplicity and Speed need, knowing that the powerful architecture underneath is ready to support whatever comes next.
 
 Your decision to start with a professional-grade monorepo and a relational schema, while creating significant initial friction, was the correct one. It ensures that the simple task data you create tomorrow will be a valuable, queryable asset for the "Everything App" you build years from now. You will not have to rip anything out. You will only build upon the foundation you have just successfully laid.
+
+## Task Completion Status: Use `completed` Only
+
+- The canonical field for marking a task as complete/incomplete is `completed` (boolean).
+- Do not use `is_completed` anywhere in the codebase, schema, or documentation.
+- All types, queries, and UI must reference `completed`.

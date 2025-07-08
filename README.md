@@ -1,5 +1,7 @@
 # life-command-rebuild
 
+[➡️ Project Context: MVP Speed vs. "Everything App" Architecture](./PROJECT_CONTEXT.md)
+
 ## 🚀 Production-Ready Next.js + Supabase Monorepo
 
 **Deployment Status:**
@@ -173,6 +175,21 @@ This pattern enables:
 - **Strict TypeScript** configuration across all packages
 - **Zero `any` types** in production code
 
+## Decision-Making Principle: Always Contextualize Options
+
+When documenting, proposing, or reviewing solutions, always provide context:
+- Explain if an issue is a big deal or a small deal, and why.
+- State what caused it and how it could have been prevented.
+- Offer clear, actionable next steps.
+
+This ensures the team can make informed, confident decisions and learn from every issue.
+
+## Task Completion Status: Use `completed` Only
+
+- The canonical field for marking a task as complete/incomplete is `completed` (boolean).
+- Do not use `is_completed` anywhere in the codebase, schema, or documentation.
+- All types, queries, and UI must reference `completed`.
+
 ### 📊 Project Status
 
 **READY FOR PRODUCTION** ✅
@@ -323,33 +340,26 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
-## 🛡️ July 7, 2025: Critical E2E Database Isolation Fix
+## 🧪 E2E Test User & Environment Setup
 
-### Problem
-Previously, E2E tests were writing to the production Supabase database due to environment variable mismatches and Playwright not overriding the Next.js dev server environment.
-
-### Solution
-- **Renamed E2E environment variables** in `packages/e2e/.env` to use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (matching what Next.js expects).
-- **Explicitly injected E2E Supabase variables** into the Playwright `webServer.env` config in `packages/e2e/playwright.config.ts`:
-  ```ts
-  webServer: {
-    command: 'yarn workspace @life-command/web dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-    env: {
-      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    },
-  },
-  ```
-- **Validation:**
-  - Ran `yarn e2e` and confirmed all E2E tests only affected the E2E Supabase database.
-  - Manually checked both production and E2E Supabase projects to confirm isolation.
-
-### Impact
-- E2E tests are now fully isolated from production data.
-- All contributors must use the correct variable names and Playwright config for safe testing.
+- **Dedicated E2E Test User:**
+  - All E2E tests use a dedicated Supabase user: `e2e-test-user@life-command.dev` (password: see `packages/e2e/.env`).
+  - This user should exist in the E2E Supabase project before running tests.
+  - Never use a real/production user for E2E tests.
+- **Environment Variables:**
+  - E2E credentials are set in `packages/e2e/.env`:
+    ```env
+    E2E_EMAIL=e2e-test-user@life-command.dev
+    E2E_PASSWORD=your-strong-password-here
+    ```
+  - These are loaded by Playwright and injected into the test environment.
+- **Playwright Config:**
+  - The Playwright config (`packages/e2e/playwright.config.ts`) loads these variables and injects them into the web server and test context.
+  - No hardcoded credentials in code—always use environment variables.
+- **Best Practices:**
+  - Never commit real passwords to version control.
+  - Rotate the E2E test user password if compromised.
+  - If you need to reset the E2E user, delete and recreate it in Supabase, then update `.env`.
 
 ---
 
@@ -360,3 +370,18 @@ Previously, E2E tests were writing to the production Supabase database due to en
 - Confirmed that E2E setup-only deletion is sufficient: tasks are wiped before each run, and new tasks created during tests do not accumulate across runs.
 - All E2E tests now pass in Chromium, WebKit, and Firefox.
 - No teardown is needed unless immediate post-test DB cleanup is required for other workflows.
+
+---
+
+### ✅ July 7, 2025: Filtering & Sorting E2E Robustness, Final Production Readiness
+
+- **Filtering and Sorting E2E Tests:**
+  - Fixed race condition in filtering test by waiting for each task to appear after creation.
+  - Updated sorting test to filter for only the tasks created in the test, ensuring assertions are robust to other tasks in the DB.
+  - All E2E tests now pass in Chromium, WebKit, and Firefox.
+- **Production-Ready:**
+  - All planned features (completion, filtering, sorting) are implemented, tested, and documented.
+  - All code, types, and docs use `completed` (never `is_completed`).
+  - Project is fully production-ready and meets all quality standards.
+- **Next Steps:**
+  - Ready for further features, refactoring, or deployment.

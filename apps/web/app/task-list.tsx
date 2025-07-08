@@ -51,6 +51,27 @@ export default function TaskList({
   const queryClient = useQueryClient();
   const { data: tasks = [] } = useQuery(getTasksQuery(supabase));
 
+  // Filtering state
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
+  // Sorting state
+  const [sort, setSort] = useState<'newest' | 'oldest' | 'az' | 'za'>('newest');
+
+  // Apply filter
+  const filteredTasks = tasks.filter((task: Task) => {
+    if (filter === 'active') return !task.completed;
+    if (filter === 'completed') return task.completed;
+    return true;
+  });
+
+  // Apply sort
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    if (sort === 'newest') return (b.created_at || '').localeCompare(a.created_at || '');
+    if (sort === 'oldest') return (a.created_at || '').localeCompare(b.created_at || '');
+    if (sort === 'az') return a.title.localeCompare(b.title);
+    if (sort === 'za') return b.title.localeCompare(a.title);
+    return 0;
+  });
+
   const mutation = useMutation({
     mutationFn: async ({
       id,
@@ -85,8 +106,44 @@ export default function TaskList({
 
   return (
     <div>
+      {/* Filter Controls */}
+      <div className="flex gap-2 mb-2">
+        <button
+          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          onClick={() => setFilter('all')}
+          type="button"
+        >
+          All
+        </button>
+        <button
+          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          onClick={() => setFilter('active')}
+          type="button"
+        >
+          Active
+        </button>
+        <button
+          className={`px-2 py-1 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-700' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          onClick={() => setFilter('completed')}
+          type="button"
+        >
+          Completed
+        </button>
+        {/* Sorting Controls */}
+        <select
+          className="ml-4 px-2 py-1 rounded-md border font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150 bg-gray-200 text-gray-700 hover:bg-gray-300"
+          value={sort}
+          onChange={e => setSort(e.target.value as any)}
+          aria-label="Sort tasks"
+        >
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="az">A-Z</option>
+          <option value="za">Z-A</option>
+        </select>
+      </div>
       <ul className="mb-4">
-        {tasks.map((task: Task) => (
+        {sortedTasks.map((task: Task) => (
           <li
             key={task.id}
             className="py-1 border-b last:border-b-0 flex items-center gap-2"

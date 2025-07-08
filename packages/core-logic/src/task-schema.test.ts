@@ -21,4 +21,14 @@ describe('TaskSchema', () => {
     };
     expect(() => TaskSchema.parse(invalid)).toThrow();
   });
+
+  it('fails validation for missing completed', () => {
+    const invalid = {
+      id: 'b3b1c2d3-4e5f-6789-0123-456789abcdef',
+      title: 'Test Task',
+      user_id: 'user-123',
+      inserted_at: new Date().toISOString(),
+    };
+    expect(() => TaskSchema.parse(invalid)).toThrow();
+  });
 });
