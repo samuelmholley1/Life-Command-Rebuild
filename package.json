@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach --topological --parallel run build",
+    "build": "yarn workspace @life-command/web run build",
     "lint": "yarn workspaces foreach --topological --parallel run lint",
     "test": "yarn workspaces foreach --topological --parallel run test",
     "dev:web": "yarn workspace @life-command/web run dev"
