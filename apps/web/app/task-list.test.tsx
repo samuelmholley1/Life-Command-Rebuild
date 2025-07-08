@@ -159,4 +159,39 @@ describe('TaskList', () => {
     expect(zaItems[1]).toHaveTextContent('Bravo');
     expect(zaItems[2]).toHaveTextContent('Alpha');
   });
+
+  it('allows inline editing of a task title and calls updateTaskTitleAction', async () => {
+    mockedUseQuery.mockReturnValue({
+      data: [{ id: '99', title: 'Editable Task', completed: false }],
+      isLoading: false,
+    });
+    const mockCreate = jest.fn();
+    const mockUpdateStatus = jest.fn();
+    const mockDelete = jest.fn();
+    const mockUpdateTitle = jest.fn();
+
+    render(
+      <TaskList
+        createTaskAction={mockCreate}
+        updateTaskStatusAction={mockUpdateStatus}
+        deleteTaskAction={mockDelete}
+        updateTaskTitleAction={mockUpdateTitle}
+      />
+    );
+    // Click the task title to activate editing
+    fireEvent.click(screen.getByTestId('task-title'));
+    // Input should appear with original value
+    const input = screen.getByTestId('edit-title-input');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveValue('Editable Task');
+    // Change the value
+    fireEvent.change(input, { target: { value: 'New Title' } });
+    // Press Enter
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    // Should call updateTaskTitleAction with correct id and new title
+    expect(mockUpdateTitle).toHaveBeenCalledTimes(1);
+    const formData = mockUpdateTitle.mock.calls[0][0];
+    expect(formData.get('id')).toBe('99');
+    expect(formData.get('title')).toBe('New Title');
+  });
 });

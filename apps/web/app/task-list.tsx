@@ -9,6 +9,7 @@ interface TaskListProps {
   createTaskAction: (formData: FormData) => Promise<void>;
   updateTaskStatusAction: (formData: FormData) => Promise<void>;
   deleteTaskAction: (formData: FormData) => Promise<void>;
+  updateTaskTitleAction?: (formData: FormData) => Promise<void>;
 }
 
 function AddTaskForm({
@@ -46,6 +47,7 @@ export default function TaskList({
   createTaskAction,
   updateTaskStatusAction,
   deleteTaskAction,
+  updateTaskTitleAction,
 }: TaskListProps) {
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const queryClient = useQueryClient();
@@ -55,6 +57,8 @@ export default function TaskList({
   const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
   // Sorting state
   const [sort, setSort] = useState<'newest' | 'oldest' | 'az' | 'za'>('newest');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState<string>('');
 
   // Apply filter
   const filteredTasks = tasks.filter((task: Task) => {
@@ -151,7 +155,14 @@ export default function TaskList({
           >
             <form
               className="flex items-center gap-2 w-full"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (editingId === task.id && updateTaskTitleAction) {
+                  const formData = new FormData(e.currentTarget);
+                  await updateTaskTitleAction(formData);
+                  setEditingId(null);
+                }
+              }}
             >
               <input type="hidden" name="id" value={task.id} />
               <input
@@ -165,13 +176,44 @@ export default function TaskList({
                   });
                 }}
               />
-              <span
-                className={
-                  task.completed ? "line-through text-gray-400" : ""
-                }
-              >
-                {task.title}
-              </span>
+              {editingId === task.id ? (
+                <input
+                  data-testid="edit-title-input"
+                  name="title"
+                  value={editingTitle}
+                  onChange={e => setEditingTitle(e.target.value)}
+                  onBlur={async (e) => {
+                    if (updateTaskTitleAction) {
+                      const formData = new FormData(e.currentTarget.form!);
+                      await updateTaskTitleAction(formData);
+                    }
+                    setEditingId(null);
+                  }}
+                  onKeyDown={async (e) => {
+                    if (e.key === 'Enter' && updateTaskTitleAction) {
+                      const form = (e.target as HTMLInputElement).form;
+                      if (form) {
+                        const formData = new FormData(form);
+                        await updateTaskTitleAction(formData);
+                      }
+                      setEditingId(null);
+                    }
+                  }}
+                  autoFocus
+                />
+              ) : (
+                <span
+                  className={task.completed ? "line-through text-gray-400" : ""}
+                  data-testid="task-title"
+                  onClick={() => {
+                    setEditingId(task.id);
+                    setEditingTitle(task.title);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {task.title}
+                </span>
+              )}
               <button
                 type="button"
                 data-testid={`delete-task-${task.id}`}

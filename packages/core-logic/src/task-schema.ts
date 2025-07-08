@@ -12,6 +12,11 @@ export const UpdateTaskSchema = z.object({
   completed: z.boolean(),
 });
 
+export const UpdateTaskTitleSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1).max(255),
+});
+
 export const DeleteTaskSchema = z.object({
   id: z.string().uuid(),
 });
