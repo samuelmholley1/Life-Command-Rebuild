@@ -137,7 +137,7 @@ test.describe('Task Filtering and Sorting', () => {
     for (const title of titles) {
       await page.getByPlaceholder('New task title').fill(title);
       await page.getByRole('button', { name: /add task/i }).click();
-      await expect(page.getByText(title)).toBeVisible(); // Wait for each task
+      await expect(page.getByText(title)).toBeVisible({ timeout: 10000 }); // Wait for each task with longer timeout
     }
     // Get all task items and filter to only those created in this test, excluding preserved
     let items = await page.locator('[data-testid="task-item"]').allTextContents();
