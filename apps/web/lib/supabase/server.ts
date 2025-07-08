@@ -1,22 +1,24 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '../database.types';
 
 // For Server Actions, Route Handlers, and Middleware
 export function createSupabaseServerClient() {
-  const cookieStore = cookies();
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
+        async get(name: string) {
+          const cookieStore = await cookies();
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: CookieOptions) {
+        async set(name: string, value: string, options: Record<string, unknown>) {
+          const cookieStore = await cookies();
           cookieStore.set({ name, value, ...options });
         },
-        remove(name: string, options: CookieOptions) {
+        async remove(name: string, options: Record<string, unknown>) {
+          const cookieStore = await cookies();
           cookieStore.set({ name, value: '', ...options });
         },
       },
@@ -26,19 +28,17 @@ export function createSupabaseServerClient() {
 
 // For read-only operations in Server Components
 export function createSupabaseReadOnlyServerClient() {
-  const cookieStore = cookies();
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
+        async get(name: string) {
+          const cookieStore = await cookies();
           return cookieStore.get(name)?.value;
         },
-        // We pass empty methods for set/remove to prevent the client
-        // from ever trying to write a cookie in a read-only context.
-        set(name: string, value: string, options: CookieOptions) {},
-        remove(name: string, options: CookieOptions) {},
+        set() {},
+        remove() {},
       },
     }
   );

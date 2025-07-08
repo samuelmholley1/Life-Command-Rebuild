@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { useQuery } from '@tanstack/react-query';
 import TaskList from './task-list';
@@ -12,13 +13,11 @@ describe('TaskList', () => {
       data: [{ id: '42', title: 'Pure Test Task', completed: false }],
       isLoading: false,
     });
-    const mockSupabase = {};
     const mockCreate = jest.fn();
     const mockUpdate = jest.fn();
 
     render(
       <TaskList
-        supabase={mockSupabase as any}
         createTaskAction={mockCreate}
         updateTaskStatusAction={mockUpdate}
       />

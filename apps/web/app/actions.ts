@@ -29,7 +29,7 @@ export async function updateTaskStatus(formData: FormData) {
   const completed = formData.get('completed');
   const parseResult = UpdateTaskSchema.safeParse({
     id,
-    completed: completed === 'true' || completed === true,
+    completed: completed === 'true',
   });
   if (!parseResult.success) {
     throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
@@ -53,6 +53,6 @@ export async function signOut() {
   // Optionally, you could revalidatePath('/') here if needed
   // revalidatePath('/');
   // Redirect to login page
-  // @ts-expect-error
+  // @ts-expect-error: globalThis.redirect is only available in the E2E test environment, not in production or type definitions
   return globalThis?.redirect ? globalThis.redirect('/login') : (await import('next/navigation')).redirect('/login');
 }

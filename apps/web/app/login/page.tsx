@@ -4,8 +4,10 @@ import { login, signup } from './actions';
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams: { message: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 }) {
+  const message = typeof searchParams?.message === 'string' ? searchParams.message : Array.isArray(searchParams?.message) ? searchParams.message[0] : undefined;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Sign In</h1>
@@ -28,7 +30,7 @@ export default function LoginPage({
         <button formAction={signup} className="bg-green-600 text-white rounded px-3 py-2">Sign Up</button>
       </form>
       {/* We now safely read the message from the prop */}
-      {searchParams.message && <p>{searchParams.message}</p>}
+      {message && <p>{message}</p>}
     </div>
   );
 }

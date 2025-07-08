@@ -4,6 +4,7 @@ import TaskList from "./task-list";
 import { signOut, createTask, updateTaskStatus } from "./actions";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
+import type { Task } from "@life-command/core-logic";
 
 export default async function HomePage() {
   const supabase = createSupabaseReadOnlyServerClient();
@@ -18,7 +19,7 @@ export default async function HomePage() {
   // Prefetch tasks using TanStack Query
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(getTasksQuery(supabase));
-  let tasks = await queryClient.getQueryData<any[]>(["tasks"]);
+  const tasks = await queryClient.getQueryData<Task[]>(["tasks"]);
 
   // If no tasks, insert welcome task and re-fetch
   if (!tasks || tasks.length === 0) {

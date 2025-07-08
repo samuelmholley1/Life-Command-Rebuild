@@ -65,8 +65,8 @@ export default function TaskList({
     },
     onMutate: async ({ id, completed }) => {
       await queryClient.cancelQueries({ queryKey: ["tasks"] });
-      const previousTasks = queryClient.getQueryData<any[]>(["tasks"]);
-      queryClient.setQueryData(["tasks"], (old: any[] = []) =>
+      const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
+      queryClient.setQueryData(["tasks"], (old: Task[] = []) =>
         old.map((task) => (task.id === id ? { ...task, completed } : task))
       );
       return { previousTasks };
