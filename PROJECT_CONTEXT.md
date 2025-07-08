@@ -18,6 +18,11 @@ Building a simple "notepad" app is easy. Building a platform that can one day ma
 - **"Everything App" Need:** Dashboards, calendars, nested views, collaborative features.
 - **The Bridge (What you have correctly done):** You built the UI with React components (TaskForm, TaskList). While simple now, they are inherently composable. The TaskList doesn't care if it's rendering tasks for a personal to-do list or for a sub-project in a multi-million dollar corporate venture. As long as the data it receives conforms to the Task type, it will work. This component-based architecture ensures you can reuse, refactor, and expand the UI without starting from scratch.
 
+### 4. The Tension in Secure Automation & Service Layer
+- **MVP Need:** Simple API for automation, but with user-level security.
+- **"Everything App" Need:** A programmatic API that can safely automate user actions, never bypassing RLS or user context.
+- **The Bridge (What you have correctly done):** Implemented a secure `/api/commands` endpoint that requires both an API key and a user JWT, and refactored all business logic into a service layer (`taskService.ts`). This ensures all automation and UI flows use the same code, and all security policies are always enforced.
+
 ## How We Have Triaged This Tension
 Our entire debugging journey was, in effect, a process of correctly managing this tension. We built a robust, scalable architecture first, and then methodically fixed the small, tactical bugs required to make a simple MVP function on top of it.
 

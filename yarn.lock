@@ -1234,6 +1234,7 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     jest: "npm:^30.0.4"
     ts-jest: "npm:^29.4.0"
+    typescript: "npm:^5.8.3"
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft

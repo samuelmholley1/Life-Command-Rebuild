@@ -125,4 +125,12 @@ packages/
 
 ---
 
+## AI Programmatic API & Service Layer (July 2025)
+- A secure, user-scoped API endpoint `/api/commands` enables programmatic automation and AI integration.
+- All business logic is centralized in a service layer (`taskService.ts` in `core-logic`), ensuring consistency and maintainability.
+- API requires both an API key and a user JWT for authentication, strictly enforcing Row-Level Security (RLS).
+- See `APP_FUNCTIONALITY_OVERVIEW.md` for full details on API usage, security, and architecture.
+
+---
+
 For more details, see `APP_FUNCTIONALITY_OVERVIEW.md` and `PROJECT_CONTEXT.md`.

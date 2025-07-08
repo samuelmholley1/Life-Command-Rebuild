@@ -38,7 +38,16 @@ This document provides a high-level, non-technical summary of all major features
 - **No Sensitive Data in Errors:** All user-facing errors are actionable and never leak backend details.
 - **Environment Separation:** Test and production data are strictly separated.
 
-### 4. Testing & Quality
+### 5. AI Programmatic API
+- **API Endpoint:** `/api/commands` provides a secure programmatic interface for external automation and AI systems.
+- **Dual Authentication:** Requires both API key (`x-api-key` header) and JWT user authentication (`Authorization: Bearer <token>`) for maximum security.
+- **User-Scoped Operations:** All API actions operate within the context of the authenticated user, respecting Row-Level Security (RLS) policies.
+- **Supported Actions:** Currently supports `createTask` action for automated task creation from external systems.
+- **Service Layer Architecture:** API calls utilize the same core business logic (`taskService`) as the web UI, ensuring consistent validation and data handling.
+- **Security Model:** Never bypasses RLS or user permissions - all operations are performed as the authenticated user.
+- **Error Handling:** Comprehensive error responses with appropriate HTTP status codes for reliable integration.
+
+### 6. Testing & Quality
 - **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing). All selectors are robust and attribute-based to prevent locator staleness. All tests pass in Chromium, Firefox, and Webkit. **CRITICAL: Always run tests in terminal for proper observation.**
 - **Unit Testing:** All business logic and UI components are unit tested, including inline editing. **CRITICAL: Always run tests in terminal for proper observation.**
 - **React act(...) Protocol:** All async state updates in tests must be wrapped in `act` from `react` to avoid warnings and ensure reliable, future-proof tests. See `task-list.test.tsx` for an example.
@@ -46,7 +55,7 @@ This document provides a high-level, non-technical summary of all major features
 - **Zero Tolerance for Errors:** No known lint, type, or runtime errors in production.
 - **UI/UX Testing:** All visual improvements validated through comprehensive test suites.
 
-### 5. Deployment & Operations
+### 7. Deployment & Operations
 - **Vercel Deployment:** Zero-config, production-ready deployment pipeline.
 - **Monorepo:** All code, configs, and packages managed in a single repository.
 - **Yarn Berry:** Modern dependency management for reliability and speed.
