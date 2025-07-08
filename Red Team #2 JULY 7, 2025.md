@@ -190,3 +190,23 @@ The application is ready for:
 - Next.js 15 App Router enforces its own generated `PageProps` signature for `page.tsx` files, which can break strict builds even if your code is correct.
 - Our solution: Exclude `.next` from type checking in `tsconfig.json` to preserve strictness for our code while ignoring problematic generated types.
 - See README for full documentation of this workaround and rationale.
+
+---
+
+## Session Addendum: Vercel Monorepo Deployment (AI Copilot, July 7, 2025)
+
+- ✅ Successfully deployed to Vercel with Yarn Berry monorepo and local packages
+- ✅ No `builds` in `vercel.json` (empty file)
+- ✅ Root build script: `yarn workspace @life-command/web run build`
+- ✅ Vercel Root Directory: monorepo root
+- ✅ If auto-detect fails, set build command to `yarn workspace @life-command/web run build` in dashboard
+- ✅ `.next` excluded from type checking in `tsconfig.json` to avoid Next.js 15 PageProps type errors
+- ✅ All workspace dependencies and local packages are available during build
+- ✅ Favicon and static assets served from `apps/web/public/`
+- ✅ All routes, including `/login`, are working in production
+
+**Key Troubleshooting Steps:**
+- Remove `builds` from `vercel.json` to allow auto-detection
+- If `.next/routes-manifest.json` error appears, set custom build command in dashboard
+- Always install dependencies from monorepo root
+- Use only `next.config.js` (not `.ts`) for Next.js config
