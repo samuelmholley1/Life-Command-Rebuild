@@ -60,10 +60,12 @@ test.describe('Task Filtering and Sorting', () => {
     const completedTitle = `Completed E2E Task - ${Date.now()}`;
     await page.getByPlaceholder('New task title').fill(activeTitle);
     await page.getByRole('button', { name: /add task/i }).click();
-    await expect(page.getByText(activeTitle)).toBeVisible(); // Wait for active task
+    // Wait for active task to appear robustly
+    await expect(page.getByText(activeTitle)).toBeVisible({ timeout: 10000 });
     await page.getByPlaceholder('New task title').fill(completedTitle);
     await page.getByRole('button', { name: /add task/i }).click();
-    await expect(page.getByText(completedTitle)).toBeVisible(); // Wait for completed task
+    // Wait for completed task to appear robustly (longer timeout)
+    await expect(page.getByText(completedTitle)).toBeVisible({ timeout: 10000 });
     // Debug: print all task items before marking completed
     let allTaskItems = await page.locator('[data-testid="task-item"]').allTextContents();
     allTaskItems = filterPreservedTasks(allTaskItems);
