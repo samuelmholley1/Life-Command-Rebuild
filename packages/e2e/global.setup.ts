@@ -70,11 +70,16 @@ async function globalSetup(config: FullConfig) {
       // 2. Log the user.id being used for deletion
       console.log(`E2E global setup: Deleting tasks for user_id: ${user.id}`);
       // 3. Perform the delete and log the full error object if any
-      const { error: deleteError } = await supabase.from('tasks').delete().eq('user_id', user.id);
+      // Preserve any task with the special title '[PRESERVE] July 8, 2025 Historical Test Task'
+      const { error: deleteError } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('user_id', user.id)
+        .not('title', 'eq', '[PRESERVE] July 8, 2025 Historical Test Task');
       if (deleteError) {
         console.error(`E2E global setup: Failed to delete tasks for user ${user.id}:`, JSON.stringify(deleteError, null, 2));
       } else {
-        console.log(`E2E global setup: Successfully deleted all tasks for user ${user.id}.`);
+        console.log(`E2E global setup: Successfully deleted all tasks for user ${user.id} except preserved tasks.`);
       }
       // 4. Log a count of tasks after the delete attempt
       const { count: tasksAfterCount, error: countError } = await supabase

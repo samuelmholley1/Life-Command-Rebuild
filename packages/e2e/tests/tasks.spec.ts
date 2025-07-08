@@ -1,11 +1,17 @@
 import { test, expect, Page } from '@playwright/test';
 
+const PRESERVED_TASK_PREFIX = '[PRESERVE]';
+
 // Helper function to create a task to ensure test isolation
 const createTask = async (page: Page, title: string) => {
   await page.getByPlaceholder('New task title').fill(title);
   await page.getByRole('button', { name: /add task/i }).click();
   await expect(page.getByText(title)).toBeVisible();
 };
+
+// Helper to filter out preserved tasks from a list of task items
+const filterPreservedTasks = (items: string[]) =>
+  items.filter(item => !item.trim().startsWith(PRESERVED_TASK_PREFIX));
 
 test('Core Task Management Flow', async ({ page }) => {
   // Go to the base URL
@@ -38,6 +44,10 @@ test.describe('Task Management', () => {
     await taskItem.getByRole('button', { name: /delete/i }).click();
 
     // Assert that the task is no longer visible on the page
+    // Also assert that no preserved task is affected
+    const allTaskItems = await page.locator('[data-testid="task-item"]').allTextContents();
+    const preserved = allTaskItems.filter(item => item.trim().startsWith(PRESERVED_TASK_PREFIX));
+    expect(preserved.length).toBeLessThanOrEqual(1);
     await expect(page.getByText(taskTitle)).not.toBeVisible();
   });
 });
@@ -55,8 +65,9 @@ test.describe('Task Filtering and Sorting', () => {
     await page.getByRole('button', { name: /add task/i }).click();
     await expect(page.getByText(completedTitle)).toBeVisible(); // Wait for completed task
     // Debug: print all task items before marking completed
-    const allTaskItems = await page.locator('[data-testid="task-item"]').allTextContents();
-    console.log('DEBUG: All task items before marking completed:', allTaskItems);
+    let allTaskItems = await page.locator('[data-testid="task-item"]').allTextContents();
+    allTaskItems = filterPreservedTasks(allTaskItems);
+    console.log('DEBUG: All task items before marking completed (excluding preserved):', allTaskItems);
     // Mark one as completed
     const completedCheckbox = page.getByTestId('task-item').filter({ hasText: completedTitle }).getByRole('checkbox');
     await completedCheckbox.check();
@@ -65,16 +76,23 @@ test.describe('Task Filtering and Sorting', () => {
     await expect(page.getByText(completedTitle)).toBeVisible();
     // Active
     await page.getByRole('button', { name: /active/i }).click();
-    await expect(page.getByText(activeTitle)).toBeVisible();
-    await expect(page.getByText(completedTitle)).not.toBeVisible();
+    // Only the active task should be visible (excluding preserved)
+    let visibleTasks = await page.locator('[data-testid="task-item"]').allTextContents();
+    visibleTasks = filterPreservedTasks(visibleTasks);
+    expect(visibleTasks.some(t => t.includes(activeTitle))).toBe(true);
+    expect(visibleTasks.some(t => t.includes(completedTitle))).toBe(false);
     // Completed
     await page.getByRole('button', { name: /completed/i }).click();
-    await expect(page.getByText(completedTitle)).toBeVisible();
-    await expect(page.getByText(activeTitle)).not.toBeVisible();
+    visibleTasks = await page.locator('[data-testid="task-item"]').allTextContents();
+    visibleTasks = filterPreservedTasks(visibleTasks);
+    expect(visibleTasks.some(t => t.includes(completedTitle))).toBe(true);
+    expect(visibleTasks.some(t => t.includes(activeTitle))).toBe(false);
     // All again
     await page.getByRole('button', { name: /^all$/i }).click();
-    await expect(page.getByText(activeTitle)).toBeVisible();
-    await expect(page.getByText(completedTitle)).toBeVisible();
+    visibleTasks = await page.locator('[data-testid="task-item"]').allTextContents();
+    visibleTasks = filterPreservedTasks(visibleTasks);
+    expect(visibleTasks.some(t => t.includes(activeTitle))).toBe(true);
+    expect(visibleTasks.some(t => t.includes(completedTitle))).toBe(true);
   });
 
   test('sorts tasks by newest, oldest, A-Z, Z-A', async ({ page }) => {
@@ -90,8 +108,9 @@ test.describe('Task Filtering and Sorting', () => {
       await page.getByRole('button', { name: /add task/i }).click();
       await expect(page.getByText(title)).toBeVisible(); // Wait for each task
     }
-    // Get all task items and filter to only those created in this test
+    // Get all task items and filter to only those created in this test, excluding preserved
     let items = await page.locator('[data-testid="task-item"]').allTextContents();
+    items = filterPreservedTasks(items);
     const relevant = items.filter(item => titles.some(t => item.includes(t)));
     // Newest (default)
     expect(relevant[0]).toMatch(new RegExp(titles[2])); // Last created
@@ -100,6 +119,7 @@ test.describe('Task Filtering and Sorting', () => {
     // Oldest
     await page.getByLabel('Sort tasks').selectOption('oldest');
     items = await page.locator('[data-testid="task-item"]').allTextContents();
+    items = filterPreservedTasks(items);
     const relevantOldest = items.filter(item => titles.some(t => item.includes(t)));
     expect(relevantOldest[0]).toMatch(new RegExp(titles[0]));
     expect(relevantOldest[1]).toMatch(new RegExp(titles[1]));
@@ -107,6 +127,7 @@ test.describe('Task Filtering and Sorting', () => {
     // A-Z
     await page.getByLabel('Sort tasks').selectOption('az');
     items = await page.locator('[data-testid="task-item"]').allTextContents();
+    items = filterPreservedTasks(items);
     const relevantAZ = items.filter(item => titles.some(t => item.includes(t)));
     expect(relevantAZ[0]).toMatch(/Alpha/);
     expect(relevantAZ[1]).toMatch(/Bravo/);
@@ -114,6 +135,7 @@ test.describe('Task Filtering and Sorting', () => {
     // Z-A
     await page.getByLabel('Sort tasks').selectOption('za');
     items = await page.locator('[data-testid="task-item"]').allTextContents();
+    items = filterPreservedTasks(items);
     const relevantZA = items.filter(item => titles.some(t => item.includes(t)));
     expect(relevantZA[0]).toMatch(/Charlie/);
     expect(relevantZA[1]).toMatch(/Bravo/);

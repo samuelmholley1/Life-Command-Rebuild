@@ -418,3 +418,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   - Project is fully production-ready and meets all quality standards.
 - **Next Steps:**
   - Ready for further features, refactoring, or deployment.
+
+---
+
+CORE PROJECT TENSION ➡️ MVP Speed vs. "Everything App" Architecture
+
+### Preserved Test Data Policy
+
+To balance clean E2E test runs with the need for persistent test data (for auditability and future feature testing), the project preserves a single historical test task in the database:
+- **Preserved Task Title:** `[PRESERVE] July 8, 2025 Historical Test Task`
+- This task is never deleted by E2E setup scripts and remains in the database across test runs.
+- **Rationale:** This allows us to test features that require historical data, while ensuring all other test data is wiped before each run for isolation and repeatability.
+- **Test Implementation:** All E2E tests are written to ignore any task with a title starting with `[PRESERVE]` in their assertions and queries. If you add new E2E tests, ensure they do not fail or make assertions based on the presence of this preserved task.
+- **Non-coders:** If you see a task with `[PRESERVE]` in the title, do not delete or modify it. It is required for automated testing and system health checks.
