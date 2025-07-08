@@ -1,2 +1,2 @@
-const config = require('./next.config.ts');
-module.exports = config;
+const nextConfig = require('./next.config.ts').default;
+module.exports = nextConfig;
