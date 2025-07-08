@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { act } from 'react';
 import TaskList from './task-list';
 
 jest.mock('@tanstack/react-query');
@@ -186,8 +187,10 @@ describe('TaskList', () => {
     expect(input).toHaveValue('Editable Task');
     // Change the value
     fireEvent.change(input, { target: { value: 'New Title' } });
-    // Press Enter
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    // Press Enter and await state update
+    await act(async () => {
+      fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    });
     // Should call updateTaskTitleAction with correct id and new title
     expect(mockUpdateTitle).toHaveBeenCalledTimes(1);
     const formData = mockUpdateTitle.mock.calls[0][0];

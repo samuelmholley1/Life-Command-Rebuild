@@ -41,6 +41,7 @@ This document provides a high-level, non-technical summary of all major features
 ### 4. Testing & Quality
 - **E2E Testing:** Automated browser tests cover all critical user flows (login, signup, CRUD, filtering, sorting, inline editing). All selectors are robust and attribute-based to prevent locator staleness. All tests pass in Chromium, Firefox, and Webkit. **CRITICAL: Always run tests in terminal for proper observation.**
 - **Unit Testing:** All business logic and UI components are unit tested, including inline editing. **CRITICAL: Always run tests in terminal for proper observation.**
+- **React act(...) Protocol:** All async state updates in tests must be wrapped in `act` from `react` to avoid warnings and ensure reliable, future-proof tests. See `task-list.test.tsx` for an example.
 - **Manual QA:** Password reset and other flows that require email are manually tested.
 - **Zero Tolerance for Errors:** No known lint, type, or runtime errors in production.
 - **UI/UX Testing:** All visual improvements validated through comprehensive test suites.

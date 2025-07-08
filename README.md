@@ -116,4 +116,13 @@ packages/
 
 ---
 
+## ⚠️ React Testing Reliability: act(...) Warnings
+
+- All async state updates in tests must be wrapped in `act` from `react` to avoid warnings and ensure reliable, future-proof tests.
+- This project previously had a warning about unwrapped state updates in the inline editing test. It is now resolved by using `import { act } from 'react'` and wrapping async fireEvent calls in `await act(async () => { ... })`.
+- If you see a warning about act in the future, update your test to use `act` from `react` (not `react-dom/test-utils`).
+- See the inline editing test in `apps/web/app/task-list.test.tsx` for a correct example.
+
+---
+
 For more details, see `APP_FUNCTIONALITY_OVERVIEW.md` and `PROJECT_CONTEXT.md`.

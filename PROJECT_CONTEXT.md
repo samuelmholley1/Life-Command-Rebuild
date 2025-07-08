@@ -55,3 +55,8 @@ Your decision to start with a professional-grade monorepo and a relational schem
 - **NO VS Code test runners:** Terminal-only testing ensures proper observation and reliable results
 - **Cross-browser validation:** All E2E tests must pass in Chromium, Firefox, and Webkit
 - **UI validation:** All visual changes must be validated through both E2E and unit test suites
+
+## React Testing Protocol (July 8, 2025)
+- All async state updates in tests must be wrapped in `act` from `react` (not `react-dom/test-utils`) to avoid warnings and ensure test reliability.
+- See the inline editing test in `apps/web/app/task-list.test.tsx` for a correct example.
+- This protocol is enforced for all future test contributions.
