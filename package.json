@@ -10,7 +10,8 @@
     "build": "yarn workspace @life-command/web run build",
     "lint": "yarn workspaces foreach --topological --parallel run lint",
     "test": "yarn workspaces foreach --topological --parallel run test",
-    "dev:web": "yarn workspace @life-command/web run dev"
+    "dev:web": "yarn workspace @life-command/web run dev",
+    "e2e": "yarn workspace @life-command/e2e test"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",

@@ -1,7 +1,7 @@
 'use server';
 import { createSupabaseServerClient } from '../lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { TaskSchema, UpdateTaskSchema } from '@life-command/core-logic';
+import { TaskSchema, UpdateTaskSchema, DeleteTaskSchema } from '@life-command/core-logic';
 
 export async function createTask(formData: FormData) {
   const supabase = createSupabaseServerClient();
@@ -44,6 +44,26 @@ export async function updateTaskStatus(formData: FormData) {
     .update({ completed: parseResult.data.completed })
     .eq('id', parseResult.data.id)
     .eq('user_id', user.id);
+  revalidatePath('/');
+}
+
+export async function deleteTask(formData: FormData) {
+  const id = formData.get('id');
+  const parseResult = DeleteTaskSchema.safeParse({ id });
+  if (!parseResult.success) {
+    throw new Error(parseResult.error.errors[0]?.message || 'Invalid id');
+  }
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+  const { error } = await supabase
+    .from('tasks')
+    .delete()
+    .eq('id', parseResult.data.id)
+    .eq('user_id', user.id);
+  if (error) throw new Error(error.message);
   revalidatePath('/');
 }
 

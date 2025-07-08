@@ -8,6 +8,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 interface TaskListProps {
   createTaskAction: (formData: FormData) => Promise<void>;
   updateTaskStatusAction: (formData: FormData) => Promise<void>;
+  deleteTaskAction: (formData: FormData) => Promise<void>;
 }
 
 function AddTaskForm({
@@ -44,6 +45,7 @@ function AddTaskForm({
 export default function TaskList({
   createTaskAction,
   updateTaskStatusAction,
+  deleteTaskAction,
 }: TaskListProps) {
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const queryClient = useQueryClient();
@@ -88,6 +90,7 @@ export default function TaskList({
           <li
             key={task.id}
             className="py-1 border-b last:border-b-0 flex items-center gap-2"
+            data-testid="task-item"
           >
             <form
               className="flex items-center gap-2 w-full"
@@ -112,6 +115,18 @@ export default function TaskList({
               >
                 {task.title}
               </span>
+              <button
+                type="button"
+                data-testid={`delete-task-${task.id}`}
+                aria-label="Delete"
+                onClick={() => {
+                  const formData = new FormData();
+                  formData.append('id', task.id);
+                  deleteTaskAction(formData);
+                }}
+              >
+                Delete
+              </button>
             </form>
           </li>
         ))}

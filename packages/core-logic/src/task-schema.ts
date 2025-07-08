@@ -12,4 +12,8 @@ export const UpdateTaskSchema = z.object({
   completed: z.boolean(),
 });
 
+export const DeleteTaskSchema = z.object({
+  id: z.string().uuid(),
+});
+
 export type Task = z.infer<typeof TaskSchema>;
