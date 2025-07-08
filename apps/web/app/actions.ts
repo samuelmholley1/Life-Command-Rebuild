@@ -1,8 +1,12 @@
 'use server';
 import { createSupabaseServerClient } from '../lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { TaskSchema, UpdateTaskSchema, DeleteTaskSchema } from '@life-command/core-logic';
-import { UpdateTaskTitleSchema } from '@life-command/core-logic';
+import { 
+  createTaskLogic, 
+  updateTaskStatusLogic, 
+  updateTaskTitleLogic, 
+  deleteTaskLogic 
+} from '@life-command/core-logic';
 
 export async function createTask(formData: FormData) {
   const supabase = createSupabaseServerClient();
@@ -11,81 +15,58 @@ export async function createTask(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
 
-  const title = formData.get('title');
-  const parseResult = TaskSchema.pick({ title: true }).safeParse({ title });
-  if (!parseResult.success) {
-    throw new Error(parseResult.error.errors[0]?.message || 'Invalid title');
-  }
-
-  await supabase.from('tasks').insert({
-    user_id: user.id,
-    title: parseResult.data.title,
-  });
+  const title = formData.get('title') as string;
+  
+  // Call the core logic, passing the authenticated client and user ID
+  await createTaskLogic(supabase, { title, user_id: user.id });
 
   revalidatePath('/');
 }
 
 export async function updateTaskStatus(formData: FormData) {
-  const id = formData.get('id');
-  const completed = formData.get('completed');
-  const parseResult = UpdateTaskSchema.safeParse({
-    id,
-    completed: completed === 'true',
-  });
-  if (!parseResult.success) {
-    throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
-  }
   const supabase = createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
-  await supabase
-    .from('tasks')
-    .update({ completed: parseResult.data.completed })
-    .eq('id', parseResult.data.id)
-    .eq('user_id', user.id);
+
+  const id = formData.get('id') as string;
+  const completed = formData.get('completed') === 'true';
+  
+  // Call the core logic, passing the authenticated client and user ID
+  await updateTaskStatusLogic(supabase, { id, completed, user_id: user.id });
+
   revalidatePath('/');
 }
 
 export async function updateTaskTitle(formData: FormData) {
-  const id = formData.get('id');
-  const title = formData.get('title');
-  const parseResult = UpdateTaskTitleSchema.safeParse({ id, title });
-  if (!parseResult.success) {
-    throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
-  }
   const supabase = createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
-  const { error } = await supabase
-    .from('tasks')
-    .update({ title: parseResult.data.title })
-    .eq('id', parseResult.data.id)
-    .eq('user_id', user.id);
-  if (error) throw new Error(error.message);
+
+  const id = formData.get('id') as string;
+  const title = formData.get('title') as string;
+  
+  // Call the core logic, passing the authenticated client and user ID
+  await updateTaskTitleLogic(supabase, { id, title, user_id: user.id });
+
   revalidatePath('/');
 }
 
 export async function deleteTask(formData: FormData) {
-  const id = formData.get('id');
-  const parseResult = DeleteTaskSchema.safeParse({ id });
-  if (!parseResult.success) {
-    throw new Error(parseResult.error.errors[0]?.message || 'Invalid id');
-  }
   const supabase = createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
-  const { error } = await supabase
-    .from('tasks')
-    .delete()
-    .eq('id', parseResult.data.id)
-    .eq('user_id', user.id);
-  if (error) throw new Error(error.message);
+
+  const id = formData.get('id') as string;
+  
+  // Call the core logic, passing the authenticated client and user ID
+  await deleteTaskLogic(supabase, { id, user_id: user.id });
+
   revalidatePath('/');
 }
 

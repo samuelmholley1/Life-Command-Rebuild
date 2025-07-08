@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getTasksLogic } from '@life-command/core-logic';
 
 export function getTasksQuery(supabase: SupabaseClient) {
   return {
@@ -9,13 +10,9 @@ export function getTasksQuery(supabase: SupabaseClient) {
         error: userError,
       } = await supabase.auth.getUser();
       if (userError || !user) throw new Error('Not authenticated');
-      const { data: tasks, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return tasks || [];
+      
+      // Use the core logic for fetching tasks
+      return await getTasksLogic(supabase, { user_id: user.id });
     },
   };
 }

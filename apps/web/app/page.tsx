@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { createSupabaseReadOnlyServerClient } from "@/lib/supabase/server";
+import { createSupabaseReadOnlyServerClient, createSupabaseServerClient } from "@/lib/supabase/server";
 import TaskList from "./task-list";
 import { signOut, createTask, updateTaskStatus, deleteTask, updateTaskTitle } from "./actions";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
+import { createTaskLogic } from "@life-command/core-logic";
 import type { Task } from "@life-command/core-logic";
 
 export default async function HomePage() {
@@ -23,10 +24,11 @@ export default async function HomePage() {
 
   // If no tasks, insert welcome task and re-fetch
   if (!tasks || tasks.length === 0) {
-    await supabase.from("tasks").insert({
-      user_id: user.id,
+    // Use a writeable client for creating the welcome task
+    const writeableSupabase = createSupabaseServerClient();
+    await createTaskLogic(writeableSupabase, {
       title: "Welcome to Life Command!",
-      completed: false,
+      user_id: user.id,
     });
     await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     await queryClient.prefetchQuery(getTasksQuery(supabase));
