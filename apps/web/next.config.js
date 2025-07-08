@@ -1,2 +1,6 @@
-const nextConfig = require('./next.config.ts').default;
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // config options here
+};
+
 module.exports = nextConfig;
