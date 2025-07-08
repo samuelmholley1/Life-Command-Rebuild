@@ -226,3 +226,26 @@ The application is ready for:
 - If `.next/routes-manifest.json` error appears, set custom build command in dashboard
 - Always install dependencies from monorepo root
 - Use only `next.config.js` (not `.ts`) for Next.js config
+
+---
+
+## 🚨 CRITICAL INCIDENT: E2E Tests Wrote to Production Supabase (July 7, 2025)
+
+### Incident Summary
+- E2E Playwright tests were writing tasks to the production Supabase database due to environment variable naming mismatches and Playwright not overriding the Next.js dev server environment.
+
+### Root Cause
+- E2E `.env` used `SUPABASE_URL`/`SUPABASE_ANON_KEY` instead of `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- Playwright's `webServer` did not inject E2E variables, so Next.js used `.env.local` (production) by default.
+
+### Resolution
+- Renamed E2E variables in `packages/e2e/.env` to use the correct `NEXT_PUBLIC_` prefix.
+- Updated `playwright.config.ts` to inject E2E Supabase variables via `webServer.env`.
+- Validated by running `yarn e2e` and confirming only the E2E database was affected.
+- Manually checked both production and E2E Supabase dashboards for data integrity.
+
+### Impact
+- E2E and production data are now fully isolated.
+- Documented the fix in the project README for all contributors.
+
+---

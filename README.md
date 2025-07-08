@@ -320,3 +320,35 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - **Login Page Refactor:**
   - Refactored to async Server Component and robustly extract `message` from `searchParams`, silencing Next.js warnings.
+
+---
+
+## 🛡️ July 7, 2025: Critical E2E Database Isolation Fix
+
+### Problem
+Previously, E2E tests were writing to the production Supabase database due to environment variable mismatches and Playwright not overriding the Next.js dev server environment.
+
+### Solution
+- **Renamed E2E environment variables** in `packages/e2e/.env` to use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (matching what Next.js expects).
+- **Explicitly injected E2E Supabase variables** into the Playwright `webServer.env` config in `packages/e2e/playwright.config.ts`:
+  ```ts
+  webServer: {
+    command: 'yarn workspace @life-command/web dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    env: {
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    },
+  },
+  ```
+- **Validation:**
+  - Ran `yarn e2e` and confirmed all E2E tests only affected the E2E Supabase database.
+  - Manually checked both production and E2E Supabase projects to confirm isolation.
+
+### Impact
+- E2E tests are now fully isolated from production data.
+- All contributors must use the correct variable names and Playwright config for safe testing.
+
+---
