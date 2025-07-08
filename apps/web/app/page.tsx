@@ -37,7 +37,10 @@ export default async function HomePage() {
   return (
     <>
       <form action={signOut} className="mb-6">
-        <button type="submit" className="bg-gray-200 text-gray-800 rounded px-3 py-2">
+        <button
+          type="submit"
+          className="px-2 py-1 rounded-md text-white font-bold bg-gray-500 hover:bg-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
+        >
           Sign Out
         </button>
       </form>
