@@ -5665,6 +5665,7 @@ __metadata:
     "@types/react": "npm:^19.1.8"
     eslint: "npm:^8.0.0"
     husky: "npm:^9.0.0"
+    node-fetch: "npm:2"
     prettier: "npm:^3.0.0"
     typescript: "npm:^5.0.0"
   languageName: unknown
@@ -6176,6 +6177,20 @@ __metadata:
   bin:
     next: dist/bin/next
   checksum: 10c0/7a397be891adb86c57fbe48403e7b4f9f26220882d01938d6e2443e984509bf5f198654249de842e4e95598930bb22f10715b432c48f92e8641d3ae241b0e6d4
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2":
+  version: 2.7.0
+  resolution: "node-fetch@npm:2.7.0"
+  dependencies:
+    whatwg-url: "npm:^5.0.0"
+  peerDependencies:
+    encoding: ^0.1.0
+  peerDependenciesMeta:
+    encoding:
+      optional: true
+  checksum: 10c0/b55786b6028208e6fbe594ccccc213cab67a72899c9234eb59dba51062a299ea853210fcf526998eaa2867b0963ad72338824450905679ff0fa304b8c5093ae8
   languageName: node
   linkType: hard
 

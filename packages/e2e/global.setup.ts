@@ -17,8 +17,8 @@ async function globalSetup(config: FullConfig) {
   // Make a POST request to our dedicated login endpoint
   const response = await page.request.post(`${baseURL}/api/e2e-login`, {
     data: {
-      email: 'samuelmholley@gmail.com',
-      password: process.env.TEST_PASSWORD!,
+      email: process.env.E2E_EMAIL!,
+      password: process.env.E2E_PASSWORD!,
     }
   });
 

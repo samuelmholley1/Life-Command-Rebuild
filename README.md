@@ -93,6 +93,8 @@ packages/
 - Supabase account
 
 #### Quick Start
+> **Important:** Do NOT run `yarn dev` at the monorepo root. It will not start the app and will show an error. Always use the workspace command below.
+
 ```bash
 # Install dependencies
 yarn install
@@ -103,8 +105,8 @@ cp apps/web/.env.example apps/web/.env.local
 # Run database migrations
 yarn db:push
 
-# Start development server
-yarn dev
+# Start development server (from monorepo root)
+yarn workspace @life-command/web dev
 
 # Run E2E tests
 yarn e2e
@@ -113,8 +115,10 @@ yarn e2e
 ### 📦 Package Scripts
 
 #### Development
+> **Note:** `yarn dev` at the root will NOT work. Use the workspace command below.
+
 ```bash
-yarn dev          # Start development server
+yarn workspace @life-command/web dev   # Start development server
 yarn build        # Build for production
 yarn lint         # Run ESLint
 yarn type-check   # Run TypeScript checks
@@ -253,6 +257,21 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+# July 8, 2025: E2E Auth, Data Isolation, and Documentation Finalization
+
+- All E2E and manual login flows now use a dedicated, confirmed test user (`e2e-test-user@mailinator.com`) in the E2E Supabase project.
+- Environment variable handling, user creation, and API routes are fully documented and robust.
+- E2E `.env` and Playwright config ensure the correct database is always used for tests.
+- **Test Data Policy:**
+  - All E2E tests use unique, timestamped task titles.
+  - `global.setup.ts` deletes all tasks for the test user before each run, ensuring a clean state.
+  - No teardown is needed unless immediate post-test DB cleanup is required for other workflows.
+  - A small subset of test data (the E2E user and schema) is preserved for test repeatability and auditability.
+- All code, scripts, and docs reference only the dedicated test user and correct environment variables.
+- All changes from this session are now committed and pushed.
 
 ---
 

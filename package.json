@@ -23,6 +23,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.6.1"
+    "@supabase/ssr": "^0.6.1",
+    "node-fetch": "2"
   }
 }

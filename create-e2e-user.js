@@ -1,6 +1,13 @@
 // create-e2e-user.js
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: './packages/e2e/.env' });
+require('dotenv').config({ path: __dirname + '/packages/e2e/.env' });
+
+console.log('DEBUG ENV:', {
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  E2E_EMAIL: process.env.E2E_EMAIL,
+  E2E_PASSWORD: process.env.E2E_PASSWORD,
+});
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
