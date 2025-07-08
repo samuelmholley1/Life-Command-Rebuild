@@ -1,5 +1,9 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "yarn install --immutable",
-  "buildCommand": "cd apps/web && yarn build"
+  "builds": [
+    {
+      "src": "apps/web/next.config.js",
+      "use": "@vercel/next"
+    }
+  ],
+  "_copilotRedeployTrigger": "2025-07-07"
 }
