@@ -84,6 +84,31 @@
 - **Solution**: Proper `.yarnrc.yml`, committed binary, correct build commands
 - **Result**: Successful Vercel deployments with monorepo support
 
+---
+
+## July 7, 2025: Red Team Session & Type/Lint Fixes
+
+### Key Outcomes from Session
+- Resolved Next.js PageProps type error in `app/login/page.tsx` by using direct prop typing (no PageProps import)
+- Confirmed best practice: do not use Next.js `PageProps` for simple pages; use `{ searchParams?: Record<string, string | string[]> }` directly
+- Fixed all ESLint and TypeScript errors, including:
+  - Added required descriptions to all `@ts-expect-error` usages
+  - Replaced all unnecessary `let` with `const` for variables never reassigned
+- Verified Vercel auto-deploy triggers and troubleshooting steps
+- Documented the correct approach for Next.js App Router page prop typing
+- Updated login page implementation to match best practices
+- Committed and pushed all fixes to `main` branch
+- Ensured Vercel deployment pipeline is working and up-to-date
+
+### Session Transcript Summary
+- Discussed and resolved Next.js type constraint issues
+- Compared and explained different approaches to page prop typing
+- Provided clear recommendation and rationale for direct prop typing
+- Documented troubleshooting steps for Vercel deployment triggers
+- All changes reflected in codebase and documentation
+
+---
+
 ### 📊 REMAINING CONSIDERATIONS
 
 #### 1. Generated Type Error (MINOR - ACCEPTABLE)

@@ -1,11 +1,7 @@
 import { login, signup } from './actions';
 
-type LoginPageProps = {
-  searchParams?: Record<string, string | string[]>;
-};
-
 // The component now correctly receives searchParams as a prop
-export default function LoginPage({ searchParams }: LoginPageProps) {
+export default function LoginPage({ searchParams }: { searchParams?: Record<string, string | string[]> }) {
   const message = typeof searchParams?.message === 'string' ? searchParams.message : Array.isArray(searchParams?.message) ? searchParams.message[0] : undefined;
 
   return (
