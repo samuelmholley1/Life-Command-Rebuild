@@ -1,5 +1,19 @@
 # life-command-rebuild
 
+> **Required Reading for New Agents:**
+> 
+> Welcome! Before you do anything, you must thoroughly review the following foundational documents:
+> - `README.md` (this file)
+> - `PROJECT_CONTEXT.md`
+> - `APP_FUNCTIONALITY_OVERVIEW.md`
+> - `COMMANDS.md`
+> 
+> These documents are the project brain and are required context for all engineering work. As your first message, you must reply:
+> 
+> "I ACCEPT. Here are the foundational pieces of context I consider most important: ..."
+> 
+> and then summarize the most critical points from each doc. This is mandatory for all new agents and contributors.
+
 [➡️ Project Context: CORE PROJECT TENSION ➡️ MVP Speed vs. "Everything App" Architecture](./PROJECT_CONTEXT.md)
 
 ## 🚀 Production-Ready Next.js + Supabase Monorepo
@@ -25,6 +39,20 @@
 - Exclude `.next` from type checking in `tsconfig.json` to avoid generated type errors
 
 ---
+
+## Command Policy (Critical)
+- **Supported commands:**
+  - `yarn workspace @life-command/web dev` (start dev server)
+  - `yarn workspace @life-command/web build` (build web app)
+  - `cd packages/e2e && npm test` (run E2E tests)
+  - `cd apps/web && npm test` (run unit tests)
+  - `yarn install --immutable` (install dependencies)
+- **Unsupported commands:**
+  - `pnpm ...` (not supported)
+  - `yarn workspace @life-command/e2e test` (not supported)
+  - VS Code test runners or integrated test tools (not supported)
+  - `bun ...` (not supported)
+- **IMPORTANT:** Any changes to supported or unsupported commands must be reported via chat to the founder immediately.
 
 A modern, production-ready task management application built with Next.js 15, Supabase, and comprehensive E2E testing. Features a clean monorepo architecture with Yarn Berry workspaces and full TypeScript strictness.
 

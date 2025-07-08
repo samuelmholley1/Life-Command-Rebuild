@@ -1,5 +1,7 @@
 # Monorepo Command Reference
 
+> **Required Reading:** This document is foundational for all new agents and contributors. Review thoroughly before running any commands or making changes. See README for onboarding protocol.
+
 ## Supported Commands (Yarn Berry Only)
 
 - **Start Dev Server:**
@@ -34,6 +36,7 @@
 - Testing commands must be run from their specific package directories in terminal.
 - If you see a command in documentation or scripts that is not listed above, it is likely incorrect for this project.
 - The only supported package manager is **Yarn Berry** (v2+), with workspaces.
+- **IMPORTANT:** Any changes to supported or unsupported commands must be reported via chat to the founder immediately.
 
 ## Production Build (Vercel):
   - `yarn install --immutable`
@@ -43,9 +46,9 @@
 ## AI Programmatic API
 - **Endpoint:** `/api/commands` (POST)
 - **Auth:** Requires both `x-api-key` and `Authorization: Bearer <user_jwt>`
-- **Action:** `createTask` (more actions can be added)
+- **Actions:** `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`
 - **Security:** All actions are user-scoped and respect RLS (never use service role key)
 
 ---
 
-_Last updated: July 8, 2025 - Added critical testing protocol requirements_
+_Last updated: July 8, 2025 - Added critical testing protocol requirements and reporting policy_

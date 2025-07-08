@@ -1,5 +1,7 @@
 # Project Context: MVP Speed vs. "Everything App" Architecture
 
+> **Required Reading:** This document is foundational for all new agents and contributors. Review thoroughly before any engineering or product work. See README for onboarding protocol.
+
 ## The Central Tension
 Building a simple "notepad" app is easy. Building a platform that can one day manage every aspect of a person's life is hard. Doing both at the same time requires careful architectural decisions.
 

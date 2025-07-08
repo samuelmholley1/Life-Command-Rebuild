@@ -1,5 +1,7 @@
 # Life Command – Core App Functionality Overview
 
+> **Required Reading:** This document is foundational for all new agents, engineers, and non-coder stakeholders. Review thoroughly before contributing or making decisions. See README for onboarding protocol.
+
 _Last updated: July 8, 2025_
 
 This document provides a high-level, non-technical summary of all major features and flows in the Life Command application. It is intended for executive and non-coder stakeholders (e.g., CTO, product leads) who need a clear understanding of what the app does, how it works, and what is in production.
@@ -42,7 +44,7 @@ This document provides a high-level, non-technical summary of all major features
 - **API Endpoint:** `/api/commands` provides a secure programmatic interface for external automation and AI systems.
 - **Dual Authentication:** Requires both API key (`x-api-key` header) and JWT user authentication (`Authorization: Bearer <token>`) for maximum security.
 - **User-Scoped Operations:** All API actions operate within the context of the authenticated user, respecting Row-Level Security (RLS) policies.
-- **Supported Actions:** Currently supports `createTask` action for automated task creation from external systems.
+- **Supported Actions:** Supports `createTask`, `deleteTask`, `updateTaskCompletion`, and `updateTaskTitle` for automated task management from external systems.
 - **Service Layer Architecture:** API calls utilize the same core business logic (`taskService`) as the web UI, ensuring consistent validation and data handling.
 - **Security Model:** Never bypasses RLS or user permissions - all operations are performed as the authenticated user.
 - **Error Handling:** Comprehensive error responses with appropriate HTTP status codes for reliable integration.
