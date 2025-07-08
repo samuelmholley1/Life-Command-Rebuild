@@ -353,15 +353,10 @@ Previously, E2E tests were writing to the production Supabase database due to en
 
 ---
 
-## 🧪 E2E Testing & Debugging (July 7, 2025)
+## 🛠️ July 7, 2025: E2E, Next.js 15+, and Debugging Updates
 
-- Successfully debugged environment variable issues and E2E task deletion failures.
-- The E2E authentication flow now returns a Supabase session and user object, ensuring reliable test cleanup.
-- **Definitive test command:**
-
-```bash
-yarn e2e
-```
-
-- All agents and contributors must run tests using the above terminal command. Do not run test files independently.
-- Test user: `samuelmholley@gmail.com` is currently used for E2E authentication. This is a real email and may be unideal for long-term use—consider switching to a dedicated test account in the future.
+- Refactored login page to use the async pattern for `searchParams` (Next.js 15+ dynamic API compliance). This eliminates all runtime warnings and browser-specific failures.
+- Added aggressive debug logging to E2E global setup for task deletion, including before/after state and error details.
+- Confirmed that E2E setup-only deletion is sufficient: tasks are wiped before each run, and new tasks created during tests do not accumulate across runs.
+- All E2E tests now pass in Chromium, WebKit, and Firefox.
+- No teardown is needed unless immediate post-test DB cleanup is required for other workflows.

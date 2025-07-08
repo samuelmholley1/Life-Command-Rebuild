@@ -56,11 +56,35 @@ async function globalSetup(config: FullConfig) {
     }
     console.log(`E2E global setup: Retrieved user ID for cleanup: ${user.id}`); // Debug log
     try {
+      // Aggressive debug logging before deletion
+      // 1. Retrieve and log all existing tasks for the test user
+      const { data: tasksBefore, error: selectError } = await supabase
+        .from('tasks')
+        .select('id, title')
+        .eq('user_id', user.id);
+      if (selectError) {
+        console.error('E2E global setup: Error fetching tasks before deletion:', JSON.stringify(selectError, null, 2));
+      } else {
+        console.log(`E2E global setup: Tasks for user ${user.id} before deletion:`, tasksBefore);
+      }
+      // 2. Log the user.id being used for deletion
+      console.log(`E2E global setup: Deleting tasks for user_id: ${user.id}`);
+      // 3. Perform the delete and log the full error object if any
       const { error: deleteError } = await supabase.from('tasks').delete().eq('user_id', user.id);
       if (deleteError) {
-        console.error(`E2E global setup: Failed to delete tasks for user ${user.id}:`, deleteError.message);
+        console.error(`E2E global setup: Failed to delete tasks for user ${user.id}:`, JSON.stringify(deleteError, null, 2));
       } else {
         console.log(`E2E global setup: Successfully deleted all tasks for user ${user.id}.`);
+      }
+      // 4. Log a count of tasks after the delete attempt
+      const { count: tasksAfterCount, error: countError } = await supabase
+        .from('tasks')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      if (countError) {
+        console.error('E2E global setup: Error fetching task count after deletion:', JSON.stringify(countError, null, 2));
+      } else {
+        console.log(`E2E global setup: Task count for user ${user.id} after deletion:`, tasksAfterCount);
       }
     } catch (err: any) {
       console.error(`E2E global setup: Error during task deletion for user ${user.id}:`, err.message);

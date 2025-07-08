@@ -262,3 +262,13 @@ yarn e2e
 
 - All agents must use the above terminal command to run tests. Do not run test files directly or independently.
 - Note: The E2E test user is currently `samuelmholley@gmail.com` (real email). For long-term security, migrate to a dedicated test account.
+
+---
+
+## 🛠️ July 7, 2025: Next.js 15+ Dynamic API & E2E Debugging
+
+- Refactored login page to use the async pattern for `searchParams` (Next.js 15+ dynamic API compliance). This resolved all browser-specific E2E failures and warnings.
+- Added detailed debug logging to E2E global setup for task deletion, logging before/after state and errors.
+- Confirmed that setup-only deletion is robust: tasks are deleted before each run, and new tasks created during tests are cleaned up on the next run.
+- All E2E tests now pass in all browsers.
+- No teardown is needed unless immediate post-test DB cleanup is required for other workflows.

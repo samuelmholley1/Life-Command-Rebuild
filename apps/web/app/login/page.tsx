@@ -1,20 +1,19 @@
 import { login, signup } from './actions';
 import React from 'react';
 
-export type LoginPageProps = { searchParams?: Record<string, string | string[]> };
-
-const LoginPage = async ({ searchParams }: LoginPageProps) => {
-  // Ensure searchParams is treated as a plain object or Record for safe access
-  const params = searchParams as Record<string, string | string[] | undefined>;
-  let message: string | undefined;
-
-  // Now, safely access properties without triggering the warning
-  if (params && params.message !== undefined) {
-    if (typeof params.message === 'string') {
-      message = params.message;
-    } else if (Array.isArray(params.message) && params.message.length > 0) {
-      message = params.message[0];
-    }
+// Next.js 15+ async dynamic API pattern for searchParams
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ message?: string | string[] }>
+}) {
+  // Await the promise before reading .message
+  const { message } = await searchParams;
+  let displayMessage: string | undefined;
+  if (typeof message === 'string') {
+    displayMessage = message;
+  } else if (Array.isArray(message)) {
+    displayMessage = message[0];
   }
 
   return (
@@ -38,9 +37,7 @@ const LoginPage = async ({ searchParams }: LoginPageProps) => {
         <button type="submit" className="bg-blue-600 text-white rounded px-3 py-2">Sign In</button>
         <button formAction={signup} className="bg-green-600 text-white rounded px-3 py-2">Sign Up</button>
       </form>
-      {message && <p className="text-red-500 mb-4">{message}</p>}
+      {displayMessage && <p className="text-red-500 mb-4">{displayMessage}</p>}
     </div>
   );
-};
-
-export default LoginPage;
+}
