@@ -1,6 +1,16 @@
 import { login, signup } from './actions';
 import React from 'react';
 
+function mapAuthError(message?: string): string | undefined {
+  if (!message) return undefined;
+  if (message.includes("Invalid login credentials")) return "Incorrect email or password.";
+  if (message.includes("User already registered")) return "An account with this email already exists.";
+  if (message.includes("Email not confirmed")) return "Please check your email to confirm your account before signing in.";
+  if (message.includes("Password should be at least")) return "Password is too short. Please use a longer password.";
+  if (message.includes("User not found")) return "No account found with this email.";
+  return message; // fallback to raw message
+}
+
 // Next.js 15+ async dynamic API pattern for searchParams
 export default async function LoginPage({
   searchParams,
@@ -11,9 +21,9 @@ export default async function LoginPage({
   const { message } = await searchParams;
   let displayMessage: string | undefined;
   if (typeof message === 'string') {
-    displayMessage = message;
+    displayMessage = mapAuthError(message);
   } else if (Array.isArray(message)) {
-    displayMessage = message[0];
+    displayMessage = mapAuthError(message[0]);
   }
 
   return (

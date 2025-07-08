@@ -340,6 +340,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 
+## July 8, 2025: Improved Auth Error Handling
+
+- **User-Friendly Auth Errors:**
+  - Login and signup now display clear, actionable error messages for common authentication failures (e.g., incorrect password, user already exists, email not confirmed).
+  - Error mapping is implemented in the login page to translate Supabase errors into user-friendly text.
+  - No sensitive information is leaked; all error handling follows security best practices.
+- **Manual and E2E Testing:**
+  - Manual testing recommended for all new error states.
+  - E2E tests already cover successful and failed login flows; no new E2E tests required for this UI improvement.
+- **Best Practice:**
+  - All user-facing errors should be actionable and never expose backend details.
+
+---
+
 ## 🧪 E2E Test User & Environment Setup
 
 - **Dedicated E2E Test User:**
