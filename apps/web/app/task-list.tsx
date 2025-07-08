@@ -30,11 +30,11 @@ function AddTaskForm({
         name="title"
         placeholder="New task title"
         required
-        className="border rounded px-3 py-2 flex-1"
+        className="border rounded px-3 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
       />
       <button
         type="submit"
-        className="px-2 py-1 rounded-md text-white font-bold bg-blue-500 hover:bg-blue-700 cursor-pointer"
+        className="px-2 py-1 rounded-md text-white font-bold bg-blue-500 hover:bg-blue-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
       >
         Add Task
       </button>
@@ -119,7 +119,7 @@ export default function TaskList({
                 type="button"
                 data-testid={`delete-task-${task.id}`}
                 aria-label="Delete"
-                className="px-2 py-1 rounded-md text-white font-bold bg-red-500 hover:bg-red-700 ml-2 cursor-pointer"
+                className="px-2 py-1 rounded-md text-white font-bold bg-red-500 hover:bg-red-700 ml-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-150"
                 onClick={() => {
                   const formData = new FormData();
                   formData.append('id', task.id);
