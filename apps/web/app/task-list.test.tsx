@@ -10,8 +10,8 @@ const mockedUseMutation = useMutation as jest.Mock;
 
 describe('TaskList', () => {
   beforeEach(() => {
-    mockedUseMutation.mockImplementation(({ mutationFn }: { mutationFn: (args: any) => void }) => ({
-      mutate: (args: any) => mutationFn(args),
+    mockedUseMutation.mockImplementation(({ mutationFn }: { mutationFn: (args: FormData) => void }) => ({
+      mutate: (args: FormData) => mutationFn(args),
     }));
   });
 
@@ -79,5 +79,84 @@ describe('TaskList', () => {
 
     expect(mockDelete).toHaveBeenCalledTimes(1);
     expect(mockDelete.mock.calls[0][0].get('id')).toBe('2');
+  });
+
+  it('filters tasks by active/completed/all', () => {
+    mockedUseQuery.mockReturnValue({
+      data: [
+        { id: '1', title: 'Active Task', completed: false },
+        { id: '2', title: 'Completed Task', completed: true },
+      ],
+      isLoading: false,
+    });
+    const mockCreate = jest.fn();
+    const mockUpdate = jest.fn();
+    const mockDelete = jest.fn();
+    render(
+      <TaskList
+        createTaskAction={mockCreate}
+        updateTaskStatusAction={mockUpdate}
+        deleteTaskAction={mockDelete}
+      />
+    );
+    // Default: All
+    expect(screen.getByText('Active Task')).toBeInTheDocument();
+    expect(screen.getByText('Completed Task')).toBeInTheDocument();
+    // Filter: Active
+    fireEvent.click(screen.getByRole('button', { name: /active/i }));
+    expect(screen.getByText('Active Task')).toBeInTheDocument();
+    expect(screen.queryByText('Completed Task')).toBeNull();
+    // Filter: Completed
+    fireEvent.click(screen.getByRole('button', { name: /completed/i }));
+    expect(screen.getByText('Completed Task')).toBeInTheDocument();
+    expect(screen.queryByText('Active Task')).toBeNull();
+    // Filter: All
+    fireEvent.click(screen.getByRole('button', { name: /^all$/i }));
+    expect(screen.getByText('Active Task')).toBeInTheDocument();
+    expect(screen.getByText('Completed Task')).toBeInTheDocument();
+  });
+
+  it('sorts tasks by newest, oldest, A-Z, Z-A', () => {
+    mockedUseQuery.mockReturnValue({
+      data: [
+        { id: '1', title: 'Bravo', completed: false, created_at: '2025-07-06T10:00:00Z' },
+        { id: '2', title: 'Alpha', completed: false, created_at: '2025-07-07T10:00:00Z' },
+        { id: '3', title: 'Charlie', completed: false, created_at: '2025-07-05T10:00:00Z' },
+      ],
+      isLoading: false,
+    });
+    const mockCreate = jest.fn();
+    const mockUpdate = jest.fn();
+    const mockDelete = jest.fn();
+    render(
+      <TaskList
+        createTaskAction={mockCreate}
+        updateTaskStatusAction={mockUpdate}
+        deleteTaskAction={mockDelete}
+      />
+    );
+    // Default: Newest
+    const items = screen.getAllByTestId('task-item');
+    expect(items[0]).toHaveTextContent('Alpha'); // Newest
+    expect(items[1]).toHaveTextContent('Bravo');
+    expect(items[2]).toHaveTextContent('Charlie');
+    // Oldest
+    fireEvent.change(screen.getByLabelText(/sort tasks/i), { target: { value: 'oldest' } });
+    const oldestItems = screen.getAllByTestId('task-item');
+    expect(oldestItems[0]).toHaveTextContent('Charlie');
+    expect(oldestItems[1]).toHaveTextContent('Bravo');
+    expect(oldestItems[2]).toHaveTextContent('Alpha');
+    // A-Z
+    fireEvent.change(screen.getByLabelText(/sort tasks/i), { target: { value: 'az' } });
+    const azItems = screen.getAllByTestId('task-item');
+    expect(azItems[0]).toHaveTextContent('Alpha');
+    expect(azItems[1]).toHaveTextContent('Bravo');
+    expect(azItems[2]).toHaveTextContent('Charlie');
+    // Z-A
+    fireEvent.change(screen.getByLabelText(/sort tasks/i), { target: { value: 'za' } });
+    const zaItems = screen.getAllByTestId('task-item');
+    expect(zaItems[0]).toHaveTextContent('Charlie');
+    expect(zaItems[1]).toHaveTextContent('Bravo');
+    expect(zaItems[2]).toHaveTextContent('Alpha');
   });
 });
