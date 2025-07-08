@@ -297,3 +297,26 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - **Type Generation Quirk:**
   - Ignore type errors in generated files like `.next/types/app/login/page.ts` if your source code is correct and builds pass.
   - **Our solution:** Exclude `.next` from type checking in `tsconfig.json` to avoid these errors while keeping strictness for all real code.
+
+---
+
+## July 7, 2025: Major Improvements
+
+- **Delete Task Functionality:**
+  - Added secure server action, UI integration, and full TDD (unit + E2E) for deleting tasks.
+  - Server Action validates user and input, deletes by `user_id`.
+  - UI uses Dependency Injection for testability.
+  - E2E and unit tests ensure reliability.
+
+- **E2E Test Stability:**
+  - All E2E-created tasks now use unique titles (timestamped) to avoid Playwright strict mode errors.
+  - Pre-test cleanup: `global.setup.ts` deletes all tasks for the test user before each run, ensuring idempotency and clean state.
+
+- **Favicon Conflict Fix:**
+  - Moved `favicon.ico` from `public/` to `app/` to resolve Next.js conflicting file warning.
+
+- **Form Attribute Cleanup:**
+  - Removed manual `method` and `encType` from forms using Server Actions, as React/Next.js provide these automatically.
+
+- **Login Page Refactor:**
+  - Refactored to async Server Component and robustly extract `message` from `searchParams`, silencing Next.js warnings.

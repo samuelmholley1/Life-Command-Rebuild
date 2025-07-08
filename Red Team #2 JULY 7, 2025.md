@@ -112,6 +112,22 @@
 
 ---
 
+### Additional Session Outcomes (July 7, 2025)
+
+- **Delete Task Feature:**
+  Implemented full-stack delete task capability with TDD: server action, DI-based UI, unit and E2E tests.
+
+- **E2E Test Reliability:**
+  - Unique task titles in all E2E tests.
+  - Pre-test cleanup of all tasks for the test user in `global.setup.ts`.
+
+- **Favicon Conflict:**
+  - Moved favicon to `app/` directory to resolve Next.js warning.
+
+- **Form & Login Page Improvements:**
+  - Removed redundant form attributes for Server Actions.
+  - Refactored login page to async and robustly handle `searchParams`.
+
 ### 📊 REMAINING CONSIDERATIONS
 
 #### 1. Generated Type Error (MINOR - ACCEPTABLE)
