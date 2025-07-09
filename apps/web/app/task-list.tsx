@@ -100,6 +100,16 @@ export default function TaskList({
     }
   }, [newTaskId]);
 
+  // Scroll new task into view when it appears
+  useEffect(() => {
+    if (newTaskId) {
+      const el = document.querySelector(`[data-task-id='${newTaskId}']`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [newTaskId]);
+
   // Handler for delete action
   const handleDelete = async (taskId: string) => {
     const formData = new FormData();
