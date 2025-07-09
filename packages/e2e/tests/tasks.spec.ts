@@ -106,6 +106,30 @@ test.describe('Task Management', () => {
     const reloadedDueDateDisplay = reloadedTaskItem.locator('[data-testid="due-date-display"]');
     await expect(reloadedDueDateDisplay).toHaveText('Due: 2025-07-15');
   });
+
+  test('allows a user to set and persist a priority level for a task', async ({ page }) => {
+    await page.goto('/');
+    const timestamp = Date.now();
+    const taskTitle = `Task with Priority - ${timestamp}`;
+    // Create a new unique task and get its id
+    const taskId = await createTask(page, taskTitle);
+    // Locate the specific task item by stable data-task-id
+    const taskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    // Find the priority select (assume it exists for now)
+    const prioritySelect = taskItem.locator('[data-testid="set-priority-select"]');
+    await expect(prioritySelect).toBeVisible();
+    // Set the priority to '3' (High)
+    await prioritySelect.selectOption('3');
+    // Assert the priority is displayed as 'High'
+    const priorityDisplay = taskItem.locator('[data-testid="priority-display"]');
+    await expect(priorityDisplay).toHaveText('High');
+    // Reload the page
+    await page.reload();
+    // Assert the priority is still visible after reload
+    const reloadedTaskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    const reloadedPriorityDisplay = reloadedTaskItem.locator('[data-testid="priority-display"]');
+    await expect(reloadedPriorityDisplay).toHaveText('High');
+  });
 });
 
 test.describe('Task Filtering and Sorting', () => {

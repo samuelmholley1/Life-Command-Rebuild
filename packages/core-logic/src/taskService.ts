@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { TaskSchema, UpdateTaskSchema, UpdateTaskCompletionSchema, UpdateTaskTitleSchema, DeleteTaskSchema, CreateTaskSchema, SetDueDateSchema } from './task-schema';
+import { TaskSchema, UpdateTaskSchema, UpdateTaskCompletionSchema, UpdateTaskTitleSchema, DeleteTaskSchema, CreateTaskSchema, SetDueDateSchema, SetPrioritySchema } from './task-schema';
 
 export interface CreateTaskParams {
   title: string;
@@ -153,6 +153,24 @@ export async function updateTaskDueDateLogic(
     throw new Error(error.message);
   }
   return data;
+}
+
+/**
+ * Core task priority update logic - validates and updates priority
+ */
+export async function updateTaskPriorityLogic(supabase: SupabaseClient, { id, priority }: { id: string; priority: number }) {
+  const parseResult = SetPrioritySchema.safeParse({ id, priority });
+  if (!parseResult.success) {
+    throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
+  }
+  const { error, data } = await supabase
+    .from('tasks')
+    .update({ priority: parseResult.data.priority })
+    .eq('id', parseResult.data.id);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data?.[0];
 }
 
 /**

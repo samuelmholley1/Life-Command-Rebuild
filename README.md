@@ -103,9 +103,9 @@ See `COMMANDS.md` for the canonical, up-to-date list. Any changes must be reflec
 ---
 
 ## 🌐 Environment Files
-- `.env`: E2E (test) Supabase project and test user info (used for E2E tests)
+- `.env.e2e`: E2E (test) Supabase project and test user info (used for E2E tests)
 - `apps/web/.env.local`: Production Supabase project info (used for deployed/production app)
-- `/packages/e2e/.env`: E2E Supabase project and test user info (for E2E tests only)
+- `/packages/e2e/.env.e2e`: E2E Supabase project and test user info (for E2E tests only)
 - `/apps/web/.env.local`: Production Supabase project info (for local/prod app only)
 
 **Never run migrations or destructive tests against the production environment!**
@@ -123,4 +123,36 @@ See `ENVIRONMENT_FILES.md` for more details and usage instructions.
 
 ---
 
+- **Exception (July 2025):** One-time manual SQL was run directly on the E2E Supabase DB to add the `due_date` column for test coverage, and on the production Supabase DB to fix legacy migration history issues. All future schema changes must use version-controlled migrations only.
+
 For more details, see `APP_FUNCTIONALITY_OVERVIEW.md` and `PROJECT_CONTEXT.md`.
+
+# README
+
+_Last updated: July 8, 2025_
+
+## Project Overview
+- Task management with due dates and priority levels
+- E2E and unit tests for all major features
+- **Manual SQL workaround required for E2E migrations if IPv6-only project**
+
+## Migration Protocol
+- All schema changes must be version-controlled and applied via CLI/CI/CD for production
+- If E2E project is IPv6-only and CLI cannot connect, apply migration SQL manually in the Supabase dashboard (see ENVIRONMENT_FILES.md)
+
+## Testing Protocol
+- E2E: `yarn e2e` (after manual migration if needed)
+- Unit: `cd apps/web && npm test`
+
+## Environment Files
+- `.env.e2e`: E2E credentials (see ENVIRONMENT_FILES.md)
+- `.env.production`: Production credentials
+- `apps/web/.env.local`: Local/prod app credentials
+
+## Status
+- Task Priority Levels: Code, UI, docs, and unit tests complete; E2E tests blocked until manual migration is applied
+- Due Dates: Fully integrated and tested
+
+---
+
+For full onboarding and CTO policy, see ENVIRONMENT_FILES.md and COMMANDS.md.

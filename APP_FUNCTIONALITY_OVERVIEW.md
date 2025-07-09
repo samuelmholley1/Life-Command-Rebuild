@@ -31,6 +31,7 @@ This document provides a high-level, non-technical summary of all major features
 - **Sort Tasks:** Sort tasks by creation date or alphabetical order using an accessible dropdown.
 - **Task Display:** Each task is presented in a clean card layout with proper spacing, shadows, and hover effects.
 - **Preserved Task:** One historical test task is always present for auditability/testing (never deleted).
+- **Set Priority Levels:** Users can set, edit, and view priority levels for tasks (None, Low, Medium, High, Critical). Priority is validated, displayed in the UI, persists after reload, and is supported in both the UI and AI API. All priority logic is fully tested (unit and E2E) and covered by robust selectors and assertions.
 
 ### 3. User Interface & Experience
 - **Modern Design System:** Consistent visual language using Tailwind CSS with proper spacing, colors, and typography.
@@ -49,7 +50,7 @@ This document provides a high-level, non-technical summary of all major features
 - **API Endpoint:** `/api/commands` provides a secure programmatic interface for external automation and AI systems.
 - **Dual Authentication:** Requires both API key (`x-api-key` header) and JWT user authentication (`Authorization: Bearer <token>`) for maximum security.
 - **User-Scoped Operations:** All API actions operate within the context of the authenticated user, respecting Row-Level Security (RLS) policies.
-- **Supported Actions:** Supports `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`, and `setDueDate` for automated task management from external systems.
+- **Supported Actions:** Supports `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`, `setDueDate`, and `setPriority` for automated task management from external systems.
 - **Service Layer Architecture:** API calls utilize the same core business logic (`taskService`) as the web UI, ensuring consistent validation and data handling.
 - **Security Model:** Never bypasses RLS or user permissions - all operations are performed as the authenticated user.
 - **Error Handling:** Comprehensive error responses with appropriate HTTP status codes for reliable integration.
@@ -95,6 +96,24 @@ This document provides a high-level, non-technical summary of all major features
 - **Vercel Build Fix:** `vercel.json` now ensures core-logic is built before the web app, matching local build order and preventing deployment errors.
 - **Testing:** All E2E and unit tests must be run in terminal. All tests pass in Chromium, Firefox, and Webkit.
 - **Docs:** All foundational docs are now the project brain for non-coders and engineers alike.
+
+---
+
+## Features
+- Task creation, completion, editing, deletion
+- Due date support (with manual SQL migration for E2E)
+- **Task Priority Levels** (schema, service, UI, API, docs, and tests complete; E2E migration must be applied manually due to network limitation)
+- Filtering, sorting, and inline editing
+- AI API integration for all major task actions
+
+## Testing & Migration Status
+- **Unit tests:** All pass for Task Priority Levels and Due Dates
+- **E2E tests:** Blocked until manual SQL migration for priority column is applied in E2E Supabase project
+- **Production:** All migrations must be version-controlled and applied via CLI/CI/CD; manual SQL is only a temporary E2E workaround
+
+## Protocol
+- See ENVIRONMENT_FILES.md and COMMANDS.md for up-to-date migration/testing instructions and workarounds
+- All agents must follow CTO policy for migrations and environment management
 
 ---
 

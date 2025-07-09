@@ -11,7 +11,10 @@ interface TaskListProps {
   deleteTaskAction: (formData: FormData) => Promise<void>;
   updateTaskTitleAction?: (formData: FormData) => Promise<void>;
   setDueDateAction?: (formData: FormData) => Promise<void>;
+  setPriorityAction?: (formData: FormData) => Promise<void>;
 }
+
+const PRIORITY_LABELS = ['None', 'Low', 'Medium', 'High', 'Critical'];
 
 function AddTaskForm({
   createTaskAction,
@@ -50,6 +53,7 @@ export default function TaskList({
   deleteTaskAction,
   updateTaskTitleAction,
   setDueDateAction,
+  setPriorityAction,
 }: TaskListProps) {
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const queryClient = useQueryClient();
@@ -275,6 +279,29 @@ export default function TaskList({
                 <span data-testid="due-date-display" className="ml-2 text-xs text-gray-600">
                   Due: {task.due_date.slice(0, 10)}
                 </span>
+              )}
+              {/* Priority UI */}
+              {typeof setPriorityAction === 'function' && (
+                <div className="flex items-center gap-2 ml-2">
+                  <select
+                    data-testid="set-priority-select"
+                    value={typeof task.priority === 'number' ? task.priority : 0}
+                    onChange={async (e) => {
+                      const formData = new FormData();
+                      formData.append('id', task.id);
+                      formData.append('priority', e.target.value);
+                      await setPriorityAction(formData);
+                    }}
+                    className="border border-gray-300 rounded-md p-1 text-sm"
+                  >
+                    {PRIORITY_LABELS.map((label, idx) => (
+                      <option key={idx} value={idx}>{label}</option>
+                    ))}
+                  </select>
+                  <span data-testid="priority-display" className="text-xs text-gray-600">
+                    {PRIORITY_LABELS[typeof task.priority === 'number' ? task.priority : 0]}
+                  </span>
+                </div>
               )}
               {/* Delete Button - NO FORM, direct handler */}
               <button

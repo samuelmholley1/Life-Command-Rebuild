@@ -1,5 +1,5 @@
 // create-preserved-task.js
-require('dotenv').config({ path: './packages/e2e/.env' });
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env.e2e') });
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(

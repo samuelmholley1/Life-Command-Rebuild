@@ -1,0 +1,300 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - heading "Life Command" [level=1]
+  - button "Sign Out"
+- main:
+  - text: "Filter:"
+  - button "All"
+  - button "Active"
+  - button "Completed"
+  - text: "Sort:"
+  - combobox "Sort tasks":
+    - option "Newest" [selected]
+    - option "Oldest"
+    - option "A-Z"
+    - option "Z-A"
+  - checkbox
+  - text: Task to be edited - 1752026465104
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Task with Priority - 1752026464906
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: My First E2E Task - 1752026458248
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Task with Due Date - 1752026457594
+  - textbox: 2025-07-15
+  - text: "Due: 2025-07-15"
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Completely New Title - 1752026454254
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox [checked]
+  - text: API Completion Test Task - 1752026449994
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Bravo E2E - 1752026447482
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Completely New Title - 1752026448270
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Alpha E2E - 1752026447482
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Charlie E2E - 1752026447482
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Task to be edited - 1752026444118
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox [checked]
+  - text: API Completion Test Task - 1752026442866
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox [checked]
+  - text: Completed E2E Task - 1752026443113
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: API Test Task - 1752026443587
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Active E2E Task - 1752026443113
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Task with Priority - 1752026439633
+  - textbox
+  - combobox:
+    - option "None"
+    - option "Low"
+    - option "Medium"
+    - option "High" [selected]
+    - option "Critical"
+  - text: High
+  - button "Delete"
+  - checkbox
+  - text: Task with Due Date - 1752026435669
+  - textbox: 2025-07-15
+  - text: "Due: 2025-07-15"
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Completely New Title - 1752026432222
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: My First E2E Task - 1752026431147
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: API Test Task - 1752026432155
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox [checked]
+  - text: API Completion Test Task - 1752026428336
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: Task to be edited - 1752026427405
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: API Test Task - 1752026423761
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: My First E2E Task - 1752026421680
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - checkbox
+  - text: "[PRESERVE] July 8, 2025 Historical Test Task"
+  - textbox
+  - combobox:
+    - option "None" [selected]
+    - option "Low"
+    - option "Medium"
+    - option "High"
+    - option "Critical"
+  - text: None
+  - button "Delete"
+  - textbox "New task title"
+  - button "Add Task"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```
