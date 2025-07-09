@@ -7,6 +7,8 @@ import { getTasksQuery } from "./queries";
 import { createTaskLogic } from "@life-command/core-logic";
 import type { Task } from "@life-command/core-logic";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const supabase = createSupabaseReadOnlyServerClient();
   const {
@@ -38,9 +40,14 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Header with Sign Out */}
+      {/* Header with Sign Out and Date/Time */}
       <header className="mb-8 flex justify-between items-center py-4 border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-800">Life Command</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Life Command</h1>
+          <div className="text-sm text-gray-500 mt-1">
+            {new Date().toLocaleString()} {/* Shows current date and time */}
+          </div>
+        </div>
         <form action={signOut}>
           <button
             type="submit"
@@ -50,7 +57,6 @@ export default async function HomePage() {
           </button>
         </form>
       </header>
-      
       {/* Main Content */}
       <main>
         <HydrationBoundary state={dehydratedState}>
