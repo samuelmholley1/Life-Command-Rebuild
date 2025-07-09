@@ -46,6 +46,14 @@
   ],
   "exclude": [
     "node_modules",
-    ".next"
+    ".next",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "jest.config.js",
+    "jest.setup.js",
+    "e2e",
+    "../../packages/e2e",
+    "../.next"
   ]
 }
