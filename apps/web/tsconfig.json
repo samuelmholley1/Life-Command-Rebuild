@@ -38,9 +38,8 @@
     ]
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "@types/**/*.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
@@ -54,7 +53,6 @@
     "jest.config.js",
     "jest.setup.js",
     "e2e",
-    "../../packages/e2e",
-    "../.next"
+    "../../packages/e2e"
   ]
 }
