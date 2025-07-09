@@ -6,6 +6,7 @@ import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query
 import { getTasksQuery } from "./queries";
 import { createTaskLogic } from "@life-command/core-logic";
 import type { Task } from "@life-command/core-logic";
+import LocalTime from "./LocalTime";
 
 export const dynamic = 'force-dynamic';
 
@@ -44,9 +45,7 @@ export default async function HomePage() {
       <header className="mb-8 flex justify-between items-center py-4 border-b border-gray-200">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Life Command</h1>
-          <div className="text-sm text-gray-500 mt-1">
-            {new Date().toLocaleString()} {/* Shows current date and time */}
-          </div>
+          <LocalTime />
         </div>
         <form action={signOut}>
           <button
