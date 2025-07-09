@@ -262,7 +262,7 @@ export default function TaskList({
           sortedTasks.map((task: Task) => (
             <div
               key={task.id}
-              className={`bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150 ${newTaskId === task.id ? 'ring-2 ring-yellow-300 bg-yellow-50 transition-all duration-700' : ''}`}
+              className={`bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150 ${newTaskId === task.id ? 'ring-2 ring-yellow-300 bg-yellow-50 transition-all duration-700 pulse-in' : ''}`}
               data-testid={`task-item-${task.id}`}
               data-task-id={task.id}
               style={{ transition: 'background 0.2s', cursor: 'pointer' }}

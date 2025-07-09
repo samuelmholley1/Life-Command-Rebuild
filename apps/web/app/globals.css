@@ -35,3 +35,15 @@ body {
 .animate-fade-in-out {
   animation: fade-in-out 1.2s;
 }
+
+@keyframes pulse-in {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.04); }
+  40% { transform: scale(1.08); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.pulse-in {
+  animation: pulse-in 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
