@@ -1,4 +1,4 @@
 {
   "installCommand": "yarn install --immutable",
-  "buildCommand": "yarn workspace @life-command/core-logic build && VERCEL_BUILD_NO_TYPECHECK=1 yarn workspace @life-command/web build"
+  "buildCommand": "yarn workspace @life-command/core-logic build && yarn workspace @life-command/web build"
 }
