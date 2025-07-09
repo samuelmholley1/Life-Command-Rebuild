@@ -6,7 +6,9 @@ import {
   updateTaskStatusLogic, 
   updateTaskTitleLogic, 
   deleteTaskLogic, 
-  updateTaskDueDateLogic 
+  updateTaskDueDateLogic,
+  updateTaskPriorityLogic, 
+  SetPrioritySchema 
 } from '@life-command/core-logic';
 
 export async function createTask(formData: FormData) {
@@ -83,6 +85,22 @@ export async function setDueDate(formData: FormData) {
   if (due_date === '') due_date = null;
 
   await updateTaskDueDateLogic(supabase, { id, due_date });
+  revalidatePath('/');
+}
+
+export async function setPriority(formData: FormData) {
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const id = formData.get('id') as string;
+  const priority = Number(formData.get('priority'));
+  if (!SetPrioritySchema.safeParse({ id, priority }).success) {
+    throw new Error('Invalid priority or id');
+  }
+  await updateTaskPriorityLogic(supabase, { id, priority });
   revalidatePath('/');
 }
 

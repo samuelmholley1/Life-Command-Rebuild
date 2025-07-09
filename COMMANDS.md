@@ -9,7 +9,7 @@
 - **Build Web App:**
   - `yarn workspace @life-command/web build`
 - **Run E2E Tests (CRITICAL: ALWAYS IN TERMINAL):**
-  - `cd packages/e2e && npm test`
+  - `cd packages/e2e && npm test` or `yarn e2e`
 - **Run Unit Tests (CRITICAL: ALWAYS IN TERMINAL):**
   - `cd apps/web && npm test`
 - **Install Dependencies:**
@@ -18,12 +18,17 @@
 ## CRITICAL Testing Protocol
 
 **ALWAYS RUN TESTS IN TERMINAL (MANDATORY):**
-- E2E Tests: `cd packages/e2e && npm test`
+- E2E Tests: `cd packages/e2e && npm test` or `yarn e2e`
 - Unit Tests: `cd apps/web && npm test`
 - **DO NOT** use VS Code test runners or any integrated test tools
 - **Agents must always run tests in the terminal so the user can see the output and debug as needed.**
 - Terminal testing ensures proper observation, debugging, and reliable results
 - All UI changes must be validated with both E2E and unit tests
+
+## Manual SQL Workaround for E2E Migrations (July 2025)
+- If you see persistent network or IPv6 errors when running `npx supabase db push`, you must apply the migration SQL manually in the Supabase dashboard for E2E only.
+- See ENVIRONMENT_FILES.md and README for the exact SQL and protocol.
+- **Production migrations must always be version-controlled and applied via CLI or CI/CD.**
 
 ## Nonexistent/Unsupported Commands (Do NOT Use)
 
@@ -47,12 +52,12 @@
 ## AI Programmatic API
 - **Endpoint:** `/api/commands` (POST)
 - **Auth:** Requires both `x-api-key` and `Authorization: Bearer <user_jwt>`
-- **Actions:** `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`
+- **Actions:** `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`, `setPriority`
 - **Security:** All actions are user-scoped and respect RLS (never use service role key)
 
 ---
 
-_Last updated: July 8, 2025 - Added critical testing protocol requirements and reporting policy_
+_Last updated: July 8, 2025 - Added manual SQL workaround for E2E migrations and clarified migration/testing protocol_
 
 # Canonical Life Command Commands & Protocols
 

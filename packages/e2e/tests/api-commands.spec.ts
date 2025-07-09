@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.e2e') });
 
 const API_BASE_URL = 'http://localhost:3000';
 const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY!;

@@ -6,11 +6,13 @@ import {
   updateTaskCompletionLogic,
   updateTaskTitleLogic,
   updateTaskDueDateLogic,
+  updateTaskPriorityLogic,
   CreateTaskSchema,
   DeleteTaskSchema,
   UpdateTaskCompletionSchema,
   UpdateTaskTitleSchema,
   SetDueDateSchema,
+  SetPrioritySchema,
 } from '@life-command/core-logic';
 
 export async function POST(request: NextRequest) {
@@ -115,6 +117,20 @@ export async function POST(request: NextRequest) {
         await updateTaskDueDateLogic(supabase, { id: payload.id, due_date: payload.due_date });
         return NextResponse.json(
           { status: 'success', message: 'Due date set' },
+          { status: 200 }
+        );
+      }
+      case 'setPriority': {
+        const parseResult = SetPrioritySchema.safeParse(payload);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
+            { status: 400 }
+          );
+        }
+        await updateTaskPriorityLogic(supabase, { id: payload.id, priority: payload.priority });
+        return NextResponse.json(
+          { status: 'success', message: 'Priority set' },
           { status: 200 }
         );
       }

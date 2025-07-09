@@ -1,11 +1,26 @@
 import { z } from 'zod';
 
+// Priority levels: 0=None, 1=Low, 2=Medium, 3=High, 4=Critical
+export const PriorityLevel = {
+  0: 'None',
+  1: 'Low',
+  2: 'Medium',
+  3: 'High',
+  4: 'Critical',
+} as const;
+
+export const SetPrioritySchema = z.object({
+  id: z.string().uuid(),
+  priority: z.number().int().min(0).max(4),
+});
+
 export const TaskSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
   completed: z.boolean(),
   due_date: z.string().datetime().nullable().optional(),
+  priority: z.number().int().min(0).max(4).default(0).optional(),
 });
 
 export const CreateTaskSchema = z.object({

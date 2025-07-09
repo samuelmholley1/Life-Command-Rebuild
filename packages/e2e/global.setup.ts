@@ -4,7 +4,7 @@ import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
 // Ensure environment variables are loaded for the setup script
-dotenv.config({ path: path.resolve(__dirname, './.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.e2e') });
 
 async function globalSetup(config: FullConfig) {
   // Get the base URL and storage state path from the config
