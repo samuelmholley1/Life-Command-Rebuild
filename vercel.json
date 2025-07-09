@@ -1,4 +1,4 @@
 {
   "installCommand": "yarn install --immutable",
-  "buildCommand": "yarn workspace @life-command/core-logic build && yarn workspace @life-command/web build"
+  "buildCommand": "yarn workspace @life-command/core-logic build && bash apps/web/pre-build.sh"
 }
