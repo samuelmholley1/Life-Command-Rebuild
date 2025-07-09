@@ -50,6 +50,7 @@
     "dist",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "**/__tests__/**",
     "jest.config.js",
     "jest.setup.js",
     "e2e",
