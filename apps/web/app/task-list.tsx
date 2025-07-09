@@ -161,11 +161,6 @@ export default function TaskList({
     );
   }
 
-  // Add a subtle fade-in animation to each task item for a smoother appearance
-  const fadeInStyle = {
-    animation: 'fadeIn 0.4s ease',
-  };
-
   return (
     <div>
       {/* Filter Controls */}
@@ -221,7 +216,7 @@ export default function TaskList({
               className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
               data-testid={`task-item-${task.id}`}
               data-task-id={task.id}
-              style={{ animation: 'fadeIn 0.4s ease', transition: 'background 0.2s', cursor: 'pointer' }}
+              style={{ transition: 'background 0.2s', cursor: 'pointer' }}
               onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fa')}
               onMouseLeave={e => (e.currentTarget.style.background = '')}
             >
@@ -354,12 +349,6 @@ export default function TaskList({
         )}
       </div>
       <AddTaskForm createTaskAction={createTaskAction} />
-      <style jsx global>{`
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
-}
-`}</style>
     </div>
   );
 }
