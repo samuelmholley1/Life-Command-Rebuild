@@ -22,9 +22,11 @@ function AddTaskForm({
   createTaskAction: (formData: FormData) => Promise<void>;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const queryClient = useQueryClient();
 
   async function action(formData: FormData) {
     await createTaskAction(formData);
+    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     formRef.current?.reset();
   }
 
@@ -78,6 +80,7 @@ export default function TaskList({
     const formData = new FormData();
     formData.append('id', taskId);
     await deleteTaskAction(formData);
+    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
   };
 
   // Handler for due date change
@@ -87,6 +90,7 @@ export default function TaskList({
     formData.append('due_date', newDueDate);
     if (setDueDateAction) {
       await setDueDateAction(formData);
+      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     }
   };
 
@@ -137,6 +141,17 @@ export default function TaskList({
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
+
+  // If there are no tasks, show a friendly empty state message
+  if (!tasks || tasks.length === 0) {
+    return (
+      <div className="empty-state">
+        <p style={{ color: '#888', textAlign: 'center', marginTop: '2rem' }}>
+          🎉 No tasks yet! Add your first task to get started.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -190,8 +205,11 @@ export default function TaskList({
             <div
               key={task.id}
               className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
-              data-testid="task-item"
+              data-testid={`task-item-${task.id}`}
               data-task-id={task.id}
+              style={{ transition: 'background 0.2s', cursor: 'pointer' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fa')}
+              onMouseLeave={e => (e.currentTarget.style.background = '')}
             >
               <form
                 className="flex items-center gap-3 flex-1"
@@ -200,6 +218,7 @@ export default function TaskList({
                   if (editingId === task.id && updateTaskTitleAction) {
                     const formData = new FormData(e.currentTarget);
                     await updateTaskTitleAction(formData);
+                    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                     setEditingId(null);
                   }
                 }}
@@ -229,6 +248,7 @@ export default function TaskList({
                       if (updateTaskTitleAction) {
                         const formData = new FormData(e.currentTarget.form!);
                         await updateTaskTitleAction(formData);
+                        await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                       }
                       setEditingId(null);
                     }}
@@ -238,6 +258,7 @@ export default function TaskList({
                         if (form) {
                           const formData = new FormData(form);
                           await updateTaskTitleAction(formData);
+                          await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                         }
                         setEditingId(null);
                       }
@@ -291,6 +312,7 @@ export default function TaskList({
                       formData.append('id', task.id);
                       formData.append('priority', e.target.value);
                       await setPriorityAction(formData);
+                      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                     }}
                     className="border border-gray-300 rounded-md p-1 text-sm"
                   >
