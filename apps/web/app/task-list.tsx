@@ -86,6 +86,16 @@ export default function TaskList({
   const editInputRef = useRef<HTMLInputElement>(null);
   const [newTaskId, setNewTaskId] = useState<string | null>(null);
 
+  // UI feedback: show a small 'Task added!' message when a new task is added
+  const [showAddedMsg, setShowAddedMsg] = useState(false);
+  useEffect(() => {
+    if (newTaskId) {
+      setShowAddedMsg(true);
+      const timeout = setTimeout(() => setShowAddedMsg(false), 1200);
+      return () => clearTimeout(timeout);
+    }
+  }, [newTaskId]);
+
   useEffect(() => {
     if (editingId && editInputRef.current) {
       editInputRef.current.focus();
@@ -233,8 +243,13 @@ export default function TaskList({
           </div>
         </div>
         {/* Add Task (right) */}
-        <div className="flex-1 flex justify-end min-w-[260px]">
+        <div className="flex-1 flex justify-end min-w-[260px] relative">
           <AddTaskForm createTaskAction={createTaskAction} setNewTaskId={setNewTaskId} />
+          {showAddedMsg && (
+            <div className="absolute top-0 right-0 mt-[-2.5rem] mr-2 px-3 py-1 bg-green-100 text-green-800 rounded shadow text-sm animate-fade-in-out z-10">
+              Task added!
+            </div>
+          )}
         </div>
       </div>
       {/* Task Items */}
