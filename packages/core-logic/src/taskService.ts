@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { TaskSchema, UpdateTaskSchema, UpdateTaskTitleSchema, DeleteTaskSchema } from './task-schema';
+import { TaskSchema, UpdateTaskSchema, UpdateTaskCompletionSchema, UpdateTaskTitleSchema, DeleteTaskSchema, CreateTaskSchema, SetDueDateSchema } from './task-schema';
 
 export interface CreateTaskParams {
   title: string;
@@ -27,11 +27,22 @@ export interface GetTasksParams {
   user_id: string;
 }
 
+export interface UpdateTaskCompletionParams {
+  id: string;
+  completed: boolean;
+  user_id: string;
+}
+
+export interface UpdateTaskDueDateParams {
+  id: string;
+  due_date: string | null;
+}
+
 /**
  * Core task creation logic - validates and inserts task
  */
 export async function createTaskLogic(supabase: SupabaseClient, params: CreateTaskParams) {
-  const parseResult = TaskSchema.pick({ title: true }).safeParse({ title: params.title });
+  const parseResult = CreateTaskSchema.safeParse({ title: params.title });
   if (!parseResult.success) {
     throw new Error(parseResult.error.errors[0]?.message || 'Invalid title');
   }
@@ -40,6 +51,30 @@ export async function createTaskLogic(supabase: SupabaseClient, params: CreateTa
     user_id: params.user_id,
     title: parseResult.data.title,
   });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Core task completion update logic - validates and updates completion status
+ */
+export async function updateTaskCompletionLogic(supabase: SupabaseClient, params: UpdateTaskCompletionParams) {
+  const parseResult = UpdateTaskCompletionSchema.safeParse({
+    id: params.id,
+    completed: params.completed,
+  });
+  
+  if (!parseResult.success) {
+    throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
+  }
+
+  const { error } = await supabase
+    .from('tasks')
+    .update({ completed: parseResult.data.completed })
+    .eq('id', parseResult.data.id)
+    .eq('user_id', params.user_id);
 
   if (error) {
     throw new Error(error.message);
@@ -92,6 +127,32 @@ export async function updateTaskTitleLogic(supabase: SupabaseClient, params: Upd
   if (error) {
     throw new Error(error.message);
   }
+}
+
+/**
+ * Core task due date update logic - validates and updates due date
+ */
+export async function updateTaskDueDateLogic(
+  supabase: SupabaseClient,
+  params: UpdateTaskDueDateParams
+) {
+  const parseResult = SetDueDateSchema.safeParse({
+    id: params.id,
+    due_date: params.due_date,
+  });
+  if (!parseResult.success) {
+    throw new Error(parseResult.error.errors[0]?.message || 'Invalid input');
+  }
+  const { data, error } = await supabase
+    .from('tasks')
+    .update({ due_date: parseResult.data.due_date })
+    .eq('id', parseResult.data.id)
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
 }
 
 /**

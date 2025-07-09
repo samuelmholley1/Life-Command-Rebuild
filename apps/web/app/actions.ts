@@ -5,7 +5,8 @@ import {
   createTaskLogic, 
   updateTaskStatusLogic, 
   updateTaskTitleLogic, 
-  deleteTaskLogic 
+  deleteTaskLogic, 
+  updateTaskDueDateLogic 
 } from '@life-command/core-logic';
 
 export async function createTask(formData: FormData) {
@@ -67,6 +68,21 @@ export async function deleteTask(formData: FormData) {
   // Call the core logic, passing the authenticated client and user ID
   await deleteTaskLogic(supabase, { id, user_id: user.id });
 
+  revalidatePath('/');
+}
+
+export async function setDueDate(formData: FormData) {
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const id = formData.get('id') as string;
+  let due_date = formData.get('due_date') as string | null;
+  if (due_date === '') due_date = null;
+
+  await updateTaskDueDateLogic(supabase, { id, due_date });
   revalidatePath('/');
 }
 

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createSupabaseReadOnlyServerClient, createSupabaseServerClient } from "@/lib/supabase/server";
 import TaskList from "./task-list";
-import { signOut, createTask, updateTaskStatus, deleteTask, updateTaskTitle } from "./actions";
+import { signOut, createTask, updateTaskStatus, deleteTask, updateTaskTitle, setDueDate } from "./actions";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getTasksQuery } from "./queries";
 import { createTaskLogic } from "@life-command/core-logic";
@@ -59,6 +59,7 @@ export default async function HomePage() {
             updateTaskStatusAction={updateTaskStatus}
             deleteTaskAction={deleteTask}
             updateTaskTitleAction={updateTaskTitle}
+            setDueDateAction={setDueDate}
           />
         </HydrationBoundary>
       </main>

@@ -1,20 +1,29 @@
 # life-command-rebuild
 
-> **Required Reading for New Agents:**
+> **Agent Onboarding Protocol (Read First!)**
 > 
-> Welcome! Before you do anything, you must thoroughly review the following foundational documents:
-> - `README.md` (this file)
-> - `PROJECT_CONTEXT.md`
-> - `APP_FUNCTIONALITY_OVERVIEW.md`
-> - `COMMANDS.md`
-> 
-> These documents are the project brain and are required context for all engineering work. As your first message, you must reply:
-> 
-> "I ACCEPT. Here are the foundational pieces of context I consider most important: ..."
-> 
-> and then summarize the most critical points from each doc. This is mandatory for all new agents and contributors.
+> All new agents must:
+> - Read and confirm the current working commands in `COMMANDS.md` before running any terminal commands or scripts.
+> - If you change, deprecate, or discover a command is outdated, you must:
+>   1. Update `COMMANDS.md` immediately.
+>   2. Notify the user of the change and reason.
+>   3. Update this README and any other relevant documentation if the change is significant.
+> - Never run deprecated or failing commands. Always keep documentation and users up to date.
+> - As your first message, reply: "I ACCEPT. Here are the foundational pieces of context I consider most important: ..." and summarize the most critical points from each doc. Concisely describe your persona as Chief Software Engineer for non-coder founder assisted by AI CTO, and provide current accurate commands from `COMMANDS.md`.
 
 [➡️ Project Context: CORE PROJECT TENSION ➡️ MVP Speed vs. "Everything App" Architecture](./PROJECT_CONTEXT.md)
+
+---
+
+## 📚 Foundational Documents
+- `README.md` (this file)
+- `PROJECT_CONTEXT.md`
+- `APP_FUNCTIONALITY_OVERVIEW.md`
+- `COMMANDS.md`
+
+These are the project brain and required context for all engineering work. Do not proceed without reviewing them.
+
+---
 
 ## 🚀 Production-Ready Next.js + Supabase Monorepo
 
@@ -26,7 +35,7 @@
 - ✅ No custom build/install commands in Vercel dashboard (unless troubleshooting)
 - ✅ `.next` excluded from type checking in `tsconfig.json` to avoid Next.js 15 PageProps type errors
 
-**Vercel Project Settings (as of July 7, 2025):**
+**Vercel Project Settings:**
 - Root Directory: monorepo root (not `apps/web`)
 - Build Command: (blank, or `yarn workspace @life-command/web run build` if auto-detect fails)
 - Output Directory: (blank, or `apps/web/.next` if needed)
@@ -40,32 +49,7 @@
 
 ---
 
-## Command Policy (Critical)
-- **Supported commands:**
-  - `yarn workspace @life-command/web dev` (start dev server)
-  - `yarn workspace @life-command/web build` (build web app)
-  - `cd packages/e2e && npm test` (run E2E tests)
-  - `cd apps/web && npm test` (run unit tests)
-  - `yarn install --immutable` (install dependencies)
-- **Unsupported commands:**
-  - `pnpm ...` (not supported)
-  - `yarn workspace @life-command/e2e test` (not supported)
-  - VS Code test runners or integrated test tools (not supported)
-  - `bun ...` (not supported)
-- **IMPORTANT:** Any changes to supported or unsupported commands must be reported via chat to the founder immediately.
-
-A modern, production-ready task management application built with Next.js 15, Supabase, and comprehensive E2E testing. Features a clean monorepo architecture with Yarn Berry workspaces and full TypeScript strictness.
-
-### ✅ Production Status
-- **Build Status**: ✅ Zero lint/type errors, clean production builds
-- **Testing**: ✅ Comprehensive E2E testing with Playwright (including inline editing, robust selectors, and cross-browser reliability)
-- **Deployment**: ✅ Vercel-ready with Yarn Berry monorepo support
-- **Type Safety**: ✅ Full TypeScript strictness with proper types
-- **Code Quality**: ✅ Zero ESLint warnings, consistent patterns
-
-### 🏗️ Architecture Overview
-
-#### Monorepo Structure
+## 🏗️ Monorepo Structure
 ```
 apps/
   web/                 # Next.js 15 application
@@ -77,96 +61,65 @@ packages/
   lint-config/         # Shared ESLint config
 ```
 
-#### Key Features
-- **Next.js 15** with App Router and Server Actions
-- **Supabase** with proper SSR integration and RLS policies
-- **TanStack Query** for optimistic updates and caching
-- **Playwright E2E Testing** with secure authentication flow and robust, attribute-based selectors
-- **Yarn Berry** workspaces for monorepo management
-- **Full TypeScript** with strict mode and proper types
-- **Zero-config deployment** to Vercel
-- **Inline Editing:** Edit task titles inline with full server validation and instant UI refresh (E2E tested, robust selectors)
-- **Centralized Zod Schemas:** All task-related schemas are in `task-schema.ts` for maintainability
+---
+
+## 🛠️ Command Reference (Yarn Berry Only)
+- **Start Dev Server:** `yarn workspace @life-command/web dev`
+- **Build Web App:** `yarn workspace @life-command/web build`
+- **Run E2E Tests:** `cd packages/e2e && npm test`
+- **Run Unit Tests:** `cd apps/web && npm test`
+- **Install Dependencies:** `yarn install --immutable`
+
+See `COMMANDS.md` for the canonical, up-to-date list. Any changes must be reflected there and in this README.
+
+**Unsupported commands:**
+- `pnpm ...`, `bun ...`, `yarn workspace @life-command/e2e test`, VS Code test runners, or integrated test tools (not supported)
+- Do **not** use `yarn` without the `workspace` flag for app scripts
+- Do **not** use `npm`, `npx`, or `pnpm` except for running tests
 
 ---
 
-## Recent Session Progress (July 8, 2025)
-### Major UI/UX Enhancement Pass
-- **Comprehensive UI/UX Enhancement:** Implemented modern, consistent visual design across all components
-  - Global layout with centered content (max-w-4xl), improved typography, and subtle background
-  - Enhanced task item styling with cards, shadows, and improved spacing
-  - Consistent input field styling with proper focus states and borders
-  - Improved button styling with consistent sizing and hover states
-  - Better filter controls with grouped layout and clear visual hierarchy
-  - Added proper header section with app title and sign-out functionality
-  - Implemented empty state messaging for better user experience
-
-### Previous Work (Earlier July 8, 2025)
-- Implemented robust, E2E-testable inline editing for task titles (with stable selectors and cross-browser reliability)
-- Centralized all task-related Zod schemas in `task-schema.ts` for maintainability
-- Added server action for updating task titles with Zod validation
-- Updated E2E and unit tests to cover inline editing and ensure robust selectors (no locator staleness)
-- Cleaned up schema file structure for clarity
-- Updated documentation to reflect new features, architecture, and correct Yarn-only command usage
-- All E2E tests now pass in Chromium, Firefox, and Webkit
-
----
-
-## 🧠 Session Progress & Architecture (July 2025)
-- **AI Programmatic API:** Secure endpoint `/api/commands` for automation/AI, requires both API key and user JWT, always respects user security (RLS).
-- **Service Layer:** All business logic (task creation, update, delete, fetch) is centralized in `core-logic/taskService.ts` and reused by both UI and API for consistency and security.
-- **Vercel Build Fix:** `vercel.json` now ensures core-logic is built before the web app, matching local build order and preventing deployment errors.
-- **Testing:** All E2E and unit tests must be run in terminal. All tests pass in Chromium, Firefox, and Webkit.
-- **Docs:** All foundational docs (README, PROJECT_CONTEXT, APP_FUNCTIONALITY_OVERVIEW, COMMANDS) are now the project brain for non-coders and engineers alike.
-
----
-
-## 🛠️ Monorepo Command Reference (AI/Automation)
-
-### Supported Commands (Yarn Berry Only)
-- **Start Dev Server:**
-  - `yarn workspace @life-command/web dev`
-- **Build Web App:**
-  - `yarn workspace @life-command/web build`
-- **Run E2E Tests (ALWAYS USE TERMINAL):**
-  - `cd packages/e2e && npm test`
-- **Run Unit Tests (ALWAYS USE TERMINAL):**
-  - `cd apps/web && npm test`
-
-### Testing Guidelines
+## 🧪 Testing Protocol
 - **CRITICAL:** Always run tests in terminal for proper observation and debugging
 - All E2E tests must pass in Chromium, Firefox, and Webkit before merging
 - UI changes must be validated with both E2E and unit tests
-- Tests include comprehensive coverage of inline editing, filtering, sorting, and all task flows
-
-### Unsupported Commands
-- Do **not** use `npm`, `npx`, or `pnpm` commands in this monorepo except for running tests.
-- Do **not** use `yarn` without the `workspace` flag for app scripts.
-- Do **not** use VS Code test runners - always run tests in terminal for proper observation.
+- All async state updates in tests must be wrapped in `act` from `react` to avoid warnings (see `apps/web/app/task-list.test.tsx` for an example)
 
 ---
 
-## For AI/Automation
-- Always use Yarn Berry workspace commands as above.
-- All E2E tests must pass in Chromium, Firefox, and Webkit before merging.
-- Inline editing and all task flows are covered by robust, attribute-based E2E tests.
+## 🔑 Key Features & Architecture
+- **Next.js 15** with App Router and Server Actions
+- **Supabase** with SSR integration and RLS policies
+- **TanStack Query** for optimistic updates and caching
+- **Playwright E2E Testing** with robust, attribute-based selectors
+- **Yarn Berry** workspaces for monorepo management
+- **Full TypeScript** with strict mode and proper types
+- **Zero-config deployment** to Vercel
+- **Inline Editing:** Edit task titles inline with full server validation and instant UI refresh
+- **Centralized Zod Schemas:** All task-related schemas are in `task-schema.ts`
+- **Service Layer:** All business logic is centralized in `core-logic/taskService.ts` and reused by both UI and API
+- **AI Programmatic API:** Secure endpoint `/api/commands` for automation/AI, requires both API key and user JWT, always respects user security (RLS)
 
 ---
 
-## ⚠️ React Testing Reliability: act(...) Warnings
+## 🌐 Environment Files
+- `.env`: E2E (test) Supabase project and test user info (used for E2E tests)
+- `apps/web/.env.local`: Production Supabase project info (used for deployed/production app)
+- `/packages/e2e/.env`: E2E Supabase project and test user info (for E2E tests only)
+- `/apps/web/.env.local`: Production Supabase project info (for local/prod app only)
 
-- All async state updates in tests must be wrapped in `act` from `react` to avoid warnings and ensure reliable, future-proof tests.
-- This project previously had a warning about unwrapped state updates in the inline editing test. It is now resolved by using `import { act } from 'react'` and wrapping async fireEvent calls in `await act(async () => { ... })`.
-- If you see a warning about act in the future, update your test to use `act` from `react` (not `react-dom/test-utils`).
-- See the inline editing test in `apps/web/app/task-list.test.tsx` for a correct example.
+**Never run migrations or destructive tests against the production environment!**
+
+See `ENVIRONMENT_FILES.md` for more details and usage instructions.
 
 ---
 
-## AI Programmatic API & Service Layer (July 2025)
-- A secure, user-scoped API endpoint `/api/commands` enables programmatic automation and AI integration.
-- All business logic is centralized in a service layer (`taskService.ts` in `core-logic`), ensuring consistency and maintainability.
-- API requires both an API key and a user JWT for authentication, strictly enforcing Row-Level Security (RLS).
-- See `APP_FUNCTIONALITY_OVERVIEW.md` for full details on API usage, security, and architecture.
+## 📈 Recent Progress & Changelog
+- Major UI/UX enhancement: modern, consistent visual design, improved layout, and robust empty states
+- Inline editing for task titles: E2E tested, robust selectors, cross-browser reliability
+- Centralized all task-related Zod schemas in `task-schema.ts`
+- All E2E and unit tests now pass in Chromium, Firefox, and Webkit
+- All foundational docs are now the project brain for non-coders and engineers alike
 
 ---
 

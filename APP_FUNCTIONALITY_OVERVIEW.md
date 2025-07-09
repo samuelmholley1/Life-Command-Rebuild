@@ -1,6 +1,8 @@
 # Life Command – Core App Functionality Overview
 
-> **Required Reading:** This document is foundational for all new agents, engineers, and non-coder stakeholders. Review thoroughly before contributing or making decisions. See README for onboarding protocol.
+> **Required Reading:** This document is foundational for all new agents, engineers, and non-coder stakeholders. Review thoroughly before contributing or making decisions.
+> 
+> **Agent Onboarding:** All new agents must read the Agent Onboarding Protocol at the top of the README and confirm the current working commands in `COMMANDS.md` before running any commands. If you change or discover a command is outdated, you must update `COMMANDS.md`, notify the user, and update docs as needed. For full onboarding, see the README.
 
 _Last updated: July 8, 2025_
 
@@ -9,6 +11,8 @@ This document provides a high-level, non-technical summary of all major features
 ---
 
 ## Core Features
+
+- **Due Dates:** Users can set, edit, and view due dates for tasks. Due dates are validated, displayed in the UI, persist after reload, and are supported in both the UI and AI API. All due date logic is fully tested (unit and E2E) and covered by robust selectors and assertions. See README and COMMANDS.md for canonical usage and protocols.
 
 ### 1. Authentication & User Management
 - **Sign Up:** Users can create an account with email and password.
@@ -20,6 +24,7 @@ This document provides a high-level, non-technical summary of all major features
 ### 2. Task Management
 - **Create Task:** Users can add new tasks with a title and status using a clean, modern input form.
 - **Edit Task Title (Inline):** Users can edit a task's title directly in the list. Edits are validated and persisted server-side, with instant UI refresh. Inline editing is robustly E2E tested with stable selectors and works in all browsers.
+- **Set Due Date:** Users can set a due date for any task. Due dates are validated, displayed in the UI, and persist after reload. Supported in both UI and AI API.
 - **Complete Task:** Mark tasks as completed or active with improved checkbox styling.
 - **Delete Task:** Remove tasks securely (with user validation) using clearly styled delete buttons.
 - **Filter Tasks:** View all, active, or completed tasks using visually distinct filter buttons with active state indicators.
@@ -44,7 +49,7 @@ This document provides a high-level, non-technical summary of all major features
 - **API Endpoint:** `/api/commands` provides a secure programmatic interface for external automation and AI systems.
 - **Dual Authentication:** Requires both API key (`x-api-key` header) and JWT user authentication (`Authorization: Bearer <token>`) for maximum security.
 - **User-Scoped Operations:** All API actions operate within the context of the authenticated user, respecting Row-Level Security (RLS) policies.
-- **Supported Actions:** Supports `createTask`, `deleteTask`, `updateTaskCompletion`, and `updateTaskTitle` for automated task management from external systems.
+- **Supported Actions:** Supports `createTask`, `deleteTask`, `updateTaskCompletion`, `updateTaskTitle`, and `setDueDate` for automated task management from external systems.
 - **Service Layer Architecture:** API calls utilize the same core business logic (`taskService`) as the web UI, ensuring consistent validation and data handling.
 - **Security Model:** Never bypasses RLS or user permissions - all operations are performed as the authenticated user.
 - **Error Handling:** Comprehensive error responses with appropriate HTTP status codes for reliable integration.

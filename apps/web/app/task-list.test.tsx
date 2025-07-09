@@ -197,4 +197,38 @@ describe('TaskList', () => {
     expect(formData.get('id')).toBe('99');
     expect(formData.get('title')).toBe('New Title');
   });
+
+  it('calls setDueDateAction with correct task id and date when due date is set', async () => {
+    mockedUseQuery.mockReturnValue({
+      data: [{ id: '123', title: 'Task with Due Date', completed: false }],
+      isLoading: false,
+    });
+    const mockCreate = jest.fn();
+    const mockUpdateStatus = jest.fn();
+    const mockDelete = jest.fn();
+    const mockUpdateTitle = jest.fn();
+    const mockSetDueDate = jest.fn();
+
+    render(
+      <TaskList
+        createTaskAction={mockCreate}
+        updateTaskStatusAction={mockUpdateStatus}
+        deleteTaskAction={mockDelete}
+        updateTaskTitleAction={mockUpdateTitle}
+        setDueDateAction={mockSetDueDate}
+      />
+    );
+
+    // Find the due date input for the task
+    const dueDateInput = screen.getByTestId('set-due-date-input');
+    // Simulate typing a date
+    fireEvent.change(dueDateInput, { target: { value: '2025-07-15' } });
+    // Simulate saving (blur or Enter)
+    fireEvent.blur(dueDateInput);
+    // Assert the mock was called with correct arguments
+    expect(mockSetDueDate).toHaveBeenCalledTimes(1);
+    const formData = mockSetDueDate.mock.calls[0][0];
+    expect(formData.get('id')).toBe('123');
+    expect(formData.get('due_date')).toBe('2025-07-15');
+  });
 });

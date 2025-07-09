@@ -10,6 +10,7 @@ interface TaskListProps {
   updateTaskStatusAction: (formData: FormData) => Promise<void>;
   deleteTaskAction: (formData: FormData) => Promise<void>;
   updateTaskTitleAction?: (formData: FormData) => Promise<void>;
+  setDueDateAction?: (formData: FormData) => Promise<void>;
 }
 
 function AddTaskForm({
@@ -48,6 +49,7 @@ export default function TaskList({
   updateTaskStatusAction,
   deleteTaskAction,
   updateTaskTitleAction,
+  setDueDateAction,
 }: TaskListProps) {
   const [supabase] = useState(() => createSupabaseBrowserClient());
   const queryClient = useQueryClient();
@@ -66,6 +68,23 @@ export default function TaskList({
       editInputRef.current.focus();
     }
   }, [editingId]);
+
+  // Handler for delete action
+  const handleDelete = async (taskId: string) => {
+    const formData = new FormData();
+    formData.append('id', taskId);
+    await deleteTaskAction(formData);
+  };
+
+  // Handler for due date change
+  const handleDueDateChange = async (taskId: string, newDueDate: string) => {
+    const formData = new FormData();
+    formData.append('id', taskId);
+    formData.append('due_date', newDueDate);
+    if (setDueDateAction) {
+      await setDueDateAction(formData);
+    }
+  };
 
   // Apply filter
   const filteredTasks = tasks.filter((task: Task) => {
@@ -234,16 +253,36 @@ export default function TaskList({
                   </span>
                 )}
               </form>
+              {/* Due Date UI - NO FORM, direct handler */}
+              {setDueDateAction && (
+                <div className="flex items-center gap-2" style={{ marginLeft: 8 }}>
+                  <input
+                    type="date"
+                    data-testid="set-due-date-input"
+                    defaultValue={task.due_date ? task.due_date.slice(0, 10) : ''}
+                    onBlur={e => handleDueDateChange(task.id, e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleDueDateChange(task.id, e.currentTarget.value);
+                      }
+                    }}
+                    className="border border-gray-300 rounded-md p-1 text-sm"
+                  />
+                </div>
+              )}
+              {task.due_date && (
+                <span data-testid="due-date-display" className="ml-2 text-xs text-gray-600">
+                  Due: {task.due_date.slice(0, 10)}
+                </span>
+              )}
+              {/* Delete Button - NO FORM, direct handler */}
               <button
                 type="button"
                 data-testid={`delete-task-${task.id}`}
                 aria-label="Delete"
                 className="px-3 py-1 rounded-md text-white font-medium bg-red-500 hover:bg-red-600 ml-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-150"
-                onClick={() => {
-                  const formData = new FormData();
-                  formData.append('id', task.id);
-                  deleteTaskAction(formData);
-                }}
+                onClick={() => handleDelete(task.id)}
               >
                 Delete
               </button>

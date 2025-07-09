@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../lib/supabase/server';
-import { createTaskLogic } from '@life-command/core-logic';
-import { revalidatePath } from 'next/cache';
+import {
+  createTaskLogic,
+  deleteTaskLogic,
+  updateTaskCompletionLogic,
+  updateTaskTitleLogic,
+  updateTaskDueDateLogic,
+  CreateTaskSchema,
+  DeleteTaskSchema,
+  UpdateTaskCompletionSchema,
+  UpdateTaskTitleSchema,
+  SetDueDateSchema,
+} from '@life-command/core-logic';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check API key authentication
+    // API Key Authentication
     const apiKey = request.headers.get('x-api-key');
     if (!apiKey || apiKey !== process.env.INTERNAL_API_KEY) {
       return NextResponse.json(
@@ -14,11 +24,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse the request payload
+    // Parse request body
     const body = await request.json();
     const { action, payload } = body;
 
-    // For API requests, we need a JWT token to authenticate as a specific user
+    // JWT Authentication
     const authToken = request.headers.get('authorization');
     if (!authToken || !authToken.startsWith('Bearer ')) {
       return NextResponse.json(
@@ -26,13 +36,8 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
-
     const jwt = authToken.replace('Bearer ', '');
-
-    // Create a Supabase client with the provided JWT
     const supabase = createSupabaseServerClient();
-    
-    // Set the session using the provided JWT
     const { data: { user }, error: authError } = await supabase.auth.getUser(jwt);
     if (authError || !user) {
       return NextResponse.json(
@@ -41,31 +46,78 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Command Execution
     switch (action) {
       case 'createTask': {
-        // Validate the payload
-        if (!payload?.title || typeof payload.title !== 'string' || payload.title.trim() === '') {
+        const parseResult = CreateTaskSchema.safeParse(payload);
+        if (!parseResult.success) {
           return NextResponse.json(
-            { status: 'error', message: 'Invalid payload: title must be a non-empty string' },
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
             { status: 400 }
           );
         }
-
-        // Use the core business logic with the authenticated user's Supabase client
-        await createTaskLogic(supabase, {
-          title: payload.title,
-          user_id: user.id,
-        });
-
-        // Revalidate the home page cache
-        revalidatePath('/');
-
+        await createTaskLogic(supabase, { title: payload.title, user_id: user.id });
         return NextResponse.json(
-          { status: 'success', message: 'Task created', user_id: user.id },
+          { status: 'success', message: 'Task created' },
           { status: 200 }
         );
       }
-
+      case 'deleteTask': {
+        const parseResult = DeleteTaskSchema.safeParse(payload);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
+            { status: 400 }
+          );
+        }
+        await deleteTaskLogic(supabase, { id: payload.id, user_id: user.id });
+        return NextResponse.json(
+          { status: 'success', message: 'Task deleted' },
+          { status: 200 }
+        );
+      }
+      case 'updateTaskCompletion': {
+        const parseResult = UpdateTaskCompletionSchema.safeParse(payload);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
+            { status: 400 }
+          );
+        }
+        await updateTaskCompletionLogic(supabase, { id: payload.id, completed: payload.completed, user_id: user.id });
+        return NextResponse.json(
+          { status: 'success', message: 'Task completion updated' },
+          { status: 200 }
+        );
+      }
+      case 'updateTaskTitle': {
+        const parseResult = UpdateTaskTitleSchema.safeParse(payload);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
+            { status: 400 }
+          );
+        }
+        await updateTaskTitleLogic(supabase, { id: payload.id, title: payload.title, user_id: user.id });
+        return NextResponse.json(
+          { status: 'success', message: 'Task title updated' },
+          { status: 200 }
+        );
+      }
+      case 'setDueDate': {
+        const parseResult = SetDueDateSchema.safeParse(payload);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            { status: 'error', message: parseResult.error.errors[0]?.message || 'Invalid payload' },
+            { status: 400 }
+          );
+        }
+        await updateTaskDueDateLogic(supabase, { id: payload.id, due_date: payload.due_date });
+        return NextResponse.json(
+          { status: 'success', message: 'Due date set' },
+          { status: 200 }
+        );
+      }
       default: {
         return NextResponse.json(
           { status: 'error', message: 'Unknown action' },

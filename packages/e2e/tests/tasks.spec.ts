@@ -79,6 +79,33 @@ test.describe('Task Management', () => {
     // Assert that the new title is still visible after reload
     await expect(page.getByText(updatedTitle)).toBeVisible();
   });
+
+  test('allows a user to set and persist a due date for a task', async ({ page }) => {
+    await page.goto('/');
+    const timestamp = Date.now();
+    const taskTitle = `Task with Due Date - ${timestamp}`;
+    // Create a new unique task and get its id
+    const taskId = await createTask(page, taskTitle);
+    // Locate the specific task item by stable data-task-id
+    const taskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    // Find the due date input (assume it exists for now)
+    const dueDateInput = taskItem.locator('[data-testid="set-due-date-input"]');
+    await expect(dueDateInput).toBeVisible();
+    // Input a specific date (e.g., July 15, 2025)
+    const dueDate = '2025-07-15';
+    await dueDateInput.fill(dueDate);
+    // Save the change (simulate blur or Enter)
+    await dueDateInput.press('Enter');
+    // Assert the due date is displayed
+    const dueDateDisplay = taskItem.locator('[data-testid="due-date-display"]');
+    await expect(dueDateDisplay).toHaveText('Due: 2025-07-15');
+    // Reload the page
+    await page.reload();
+    // Assert the due date is still visible after reload
+    const reloadedTaskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    const reloadedDueDateDisplay = reloadedTaskItem.locator('[data-testid="due-date-display"]');
+    await expect(reloadedDueDateDisplay).toHaveText('Due: 2025-07-15');
+  });
 });
 
 test.describe('Task Filtering and Sorting', () => {
