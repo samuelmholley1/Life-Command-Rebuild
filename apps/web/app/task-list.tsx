@@ -153,6 +153,11 @@ export default function TaskList({
     );
   }
 
+  // Add a subtle fade-in animation to each task item for a smoother appearance
+  const fadeInStyle = {
+    animation: 'fadeIn 0.4s ease',
+  };
+
   return (
     <div>
       {/* Filter Controls */}
@@ -195,151 +200,163 @@ export default function TaskList({
           </select>
         </div>
       </div>
+      {/* Task Items */}
       <div className="space-y-2 mb-6">
         {sortedTasks.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p>No tasks found. Add your first task below!</p>
           </div>
         ) : (
-          sortedTasks.map((task: Task) => (
-            <div
-              key={task.id}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
-              data-testid={`task-item-${task.id}`}
-              data-task-id={task.id}
-              style={{ transition: 'background 0.2s', cursor: 'pointer' }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fa')}
-              onMouseLeave={e => (e.currentTarget.style.background = '')}
-            >
-              <form
-                className="flex items-center gap-3 flex-1"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  if (editingId === task.id && updateTaskTitleAction) {
-                    const formData = new FormData(e.currentTarget);
-                    await updateTaskTitleAction(formData);
-                    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-                    setEditingId(null);
-                  }
-                }}
+          sortedTasks.map((task: Task, idx: number) => (
+            <>
+              <div
+                key={task.id}
+                className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
+                data-testid={`task-item-${task.id}`}
+                data-task-id={task.id}
+                style={{ ...fadeInStyle, transition: 'background 0.2s', cursor: 'pointer' }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fa')}
+                onMouseLeave={e => (e.currentTarget.style.background = '')}
               >
-                <input type="hidden" name="id" value={task.id} />
-                <input
-                  type="checkbox"
-                  name="completed"
-                  checked={task.completed}
-                  onChange={(e) => {
-                    mutation.mutate({
-                      id: task.id,
-                      completed: e.currentTarget.checked,
-                    });
-                  }}
-                  className="w-4 h-4 text-blue-500 rounded focus:ring-blue-500"
-                />
-                {editingId === task.id ? (
-                  <input
-                    ref={editInputRef}
-                    data-testid="edit-title-input"
-                    data-task-id={task.id}
-                    name="title"
-                    value={editingTitle}
-                    onChange={e => setEditingTitle(e.target.value)}
-                    onBlur={async (e) => {
-                      if (updateTaskTitleAction) {
-                        const formData = new FormData(e.currentTarget.form!);
-                        await updateTaskTitleAction(formData);
-                        await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-                      }
+                <form
+                  className="flex items-center gap-3 flex-1"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (editingId === task.id && updateTaskTitleAction) {
+                      const formData = new FormData(e.currentTarget);
+                      await updateTaskTitleAction(formData);
+                      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                       setEditingId(null);
+                    }
+                  }}
+                >
+                  <input type="hidden" name="id" value={task.id} />
+                  <input
+                    type="checkbox"
+                    name="completed"
+                    checked={task.completed}
+                    onChange={(e) => {
+                      mutation.mutate({
+                        id: task.id,
+                        completed: e.currentTarget.checked,
+                      });
                     }}
-                    onKeyDown={async (e) => {
-                      if (e.key === 'Enter' && updateTaskTitleAction) {
-                        const form = (e.target as HTMLInputElement).form;
-                        if (form) {
-                          const formData = new FormData(form);
+                    className="w-4 h-4 text-blue-500 rounded focus:ring-blue-500"
+                  />
+                  {editingId === task.id ? (
+                    <input
+                      ref={editInputRef}
+                      data-testid="edit-title-input"
+                      data-task-id={task.id}
+                      name="title"
+                      value={editingTitle}
+                      onChange={e => setEditingTitle(e.target.value)}
+                      onBlur={async (e) => {
+                        if (updateTaskTitleAction) {
+                          const formData = new FormData(e.currentTarget.form!);
                           await updateTaskTitleAction(formData);
                           await queryClient.invalidateQueries({ queryKey: ["tasks"] });
                         }
                         setEditingId(null);
-                      }
-                    }}
-                    className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                ) : (
-                  <span
-                    className={`flex-1 cursor-pointer ${task.completed ? "line-through text-gray-400" : "text-gray-800"}`}
-                    data-testid="task-title"
-                    onClick={() => {
-                      setEditingId(task.id);
-                      setEditingTitle(task.title);
-                    }}
-                  >
-                    {task.title}
+                      }}
+                      onKeyDown={async (e) => {
+                        if (e.key === 'Enter' && updateTaskTitleAction) {
+                          const form = (e.target as HTMLInputElement).form;
+                          if (form) {
+                            const formData = new FormData(form);
+                            await updateTaskTitleAction(formData);
+                            await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+                          }
+                          setEditingId(null);
+                        }
+                      }}
+                      className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <span
+                      className={`flex-1 cursor-pointer ${task.completed ? "line-through text-gray-400" : "text-gray-800"}`}
+                      data-testid="task-title"
+                      onClick={() => {
+                        setEditingId(task.id);
+                        setEditingTitle(task.title);
+                      }}
+                    >
+                      {task.title}
+                    </span>
+                  )}
+                </form>
+                {/* Due Date UI - NO FORM, direct handler */}
+                {setDueDateAction && (
+                  <div className="flex items-center gap-2" style={{ marginLeft: 8 }}>
+                    <input
+                      type="date"
+                      data-testid="set-due-date-input"
+                      defaultValue={task.due_date ? task.due_date.slice(0, 10) : ''}
+                      onBlur={e => handleDueDateChange(task.id, e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleDueDateChange(task.id, e.currentTarget.value);
+                        }
+                      }}
+                      className="border border-gray-300 rounded-md p-1 text-sm"
+                    />
+                  </div>
+                )}
+                {task.due_date && (
+                  <span data-testid="due-date-display" className="ml-2 text-xs text-gray-600">
+                    Due: {task.due_date.slice(0, 10)}
                   </span>
                 )}
-              </form>
-              {/* Due Date UI - NO FORM, direct handler */}
-              {setDueDateAction && (
-                <div className="flex items-center gap-2" style={{ marginLeft: 8 }}>
-                  <input
-                    type="date"
-                    data-testid="set-due-date-input"
-                    defaultValue={task.due_date ? task.due_date.slice(0, 10) : ''}
-                    onBlur={e => handleDueDateChange(task.id, e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleDueDateChange(task.id, e.currentTarget.value);
-                      }
-                    }}
-                    className="border border-gray-300 rounded-md p-1 text-sm"
-                  />
-                </div>
+                {/* Priority UI */}
+                {typeof setPriorityAction === 'function' && (
+                  <div className="flex items-center gap-2 ml-2">
+                    <select
+                      data-testid="set-priority-select"
+                      value={typeof task.priority === 'number' ? task.priority : 0}
+                      onChange={async (e) => {
+                        const formData = new FormData();
+                        formData.append('id', task.id);
+                        formData.append('priority', e.target.value);
+                        await setPriorityAction(formData);
+                        await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+                      }}
+                      className="border border-gray-300 rounded-md p-1 text-sm"
+                    >
+                      {PRIORITY_LABELS.map((label, idx) => (
+                        <option key={idx} value={idx}>{label}</option>
+                      ))}
+                    </select>
+                    <span data-testid="priority-display" className="text-xs text-gray-600">
+                      {PRIORITY_LABELS[typeof task.priority === 'number' ? task.priority : 0]}
+                    </span>
+                  </div>
+                )}
+                {/* Delete Button - NO FORM, direct handler */}
+                <button
+                  type="button"
+                  data-testid={`delete-task-${task.id}`}
+                  aria-label="Delete"
+                  className="px-3 py-1 rounded-md text-white font-medium bg-red-500 hover:bg-red-600 ml-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-150"
+                  onClick={() => handleDelete(task.id)}
+                >
+                  Delete
+                </button>
+              </div>
+              {idx < sortedTasks.length - 1 && (
+                <hr className="my-1 border-gray-200" />
               )}
-              {task.due_date && (
-                <span data-testid="due-date-display" className="ml-2 text-xs text-gray-600">
-                  Due: {task.due_date.slice(0, 10)}
-                </span>
-              )}
-              {/* Priority UI */}
-              {typeof setPriorityAction === 'function' && (
-                <div className="flex items-center gap-2 ml-2">
-                  <select
-                    data-testid="set-priority-select"
-                    value={typeof task.priority === 'number' ? task.priority : 0}
-                    onChange={async (e) => {
-                      const formData = new FormData();
-                      formData.append('id', task.id);
-                      formData.append('priority', e.target.value);
-                      await setPriorityAction(formData);
-                      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-                    }}
-                    className="border border-gray-300 rounded-md p-1 text-sm"
-                  >
-                    {PRIORITY_LABELS.map((label, idx) => (
-                      <option key={idx} value={idx}>{label}</option>
-                    ))}
-                  </select>
-                  <span data-testid="priority-display" className="text-xs text-gray-600">
-                    {PRIORITY_LABELS[typeof task.priority === 'number' ? task.priority : 0]}
-                  </span>
-                </div>
-              )}
-              {/* Delete Button - NO FORM, direct handler */}
-              <button
-                type="button"
-                data-testid={`delete-task-${task.id}`}
-                aria-label="Delete"
-                className="px-3 py-1 rounded-md text-white font-medium bg-red-500 hover:bg-red-600 ml-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-150"
-                onClick={() => handleDelete(task.id)}
-              >
-                Delete
-              </button>
-            </div>
+            </>
           ))
         )}
       </div>
       <AddTaskForm createTaskAction={createTaskAction} />
+      <style jsx global>{`
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+`}</style>
     </div>
   );
 }
