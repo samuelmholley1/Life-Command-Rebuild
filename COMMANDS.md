@@ -30,6 +30,32 @@
 - See ENVIRONMENT_FILES.md and README for the exact SQL and protocol.
 - **Production migrations must always be version-controlled and applied via CLI or CI/CD.**
 
+## Vercel Build Test File Workaround (July 2025)
+
+If you see persistent build errors about test files (e.g., ESLint or type errors for `app/__tests__/TaskList.test.tsx`) on Vercel, even after updating `tsconfig.json`:
+
+- Vercel may ignore/exclude rules in monorepo setups. To guarantee test files are not type-checked in production builds, a pre-build script is used.
+
+**How it works:**
+- The script `apps/web/pre-build.sh` temporarily moves the test file out of the source tree before build, then restores it after.
+- This is triggered automatically by the `buildCommand` in `vercel.json`.
+
+**Manual usage (for local simulation):**
+```bash
+bash apps/web/pre-build.sh
+```
+
+**Key build command in vercel.json:**
+```json
+{
+  "installCommand": "yarn install --immutable",
+  "buildCommand": "yarn workspace @life-command/core-logic build && bash apps/web/pre-build.sh"
+}
+```
+
+- Do NOT run `yarn workspace @life-command/web build` directly if you want to simulate the Vercel build locally—use the script above.
+- For local dev, you may see ESLint errors in test files; these do not affect production builds.
+
 ## Nonexistent/Unsupported Commands (Do NOT Use)
 
 - `pnpm ...` (monorepo uses Yarn Berry, not pnpm)
