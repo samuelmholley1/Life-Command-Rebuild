@@ -19,8 +19,10 @@ const PRIORITY_LABELS = ['None', 'Low', 'Medium', 'High', 'Critical'];
 // Autofocus the Add Task input for quick entry
 function AddTaskForm({
   createTaskAction,
+  setNewTaskId,
 }: {
   createTaskAction: (formData: FormData) => Promise<void>;
+  setNewTaskId: (id: string | null) => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,8 +35,14 @@ function AddTaskForm({
   async function action(formData: FormData) {
     await createTaskAction(formData);
     await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    const title = formData.get("title") as string;
+    const latestTasks = queryClient.getQueryData<Task[]>(["tasks"]);
+    if (latestTasks && title) {
+      const found = latestTasks.find(t => t.title === title);
+      if (found) setNewTaskId(found.id);
+    }
     formRef.current?.reset();
-    inputRef.current?.focus(); // Refocus after adding
+    inputRef.current?.focus();
   }
 
   return (
@@ -76,12 +84,21 @@ export default function TaskList({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string>('');
   const editInputRef = useRef<HTMLInputElement>(null);
+  const [newTaskId, setNewTaskId] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingId && editInputRef.current) {
       editInputRef.current.focus();
     }
   }, [editingId]);
+
+  // Highlight effect for new task
+  useEffect(() => {
+    if (newTaskId) {
+      const timeout = setTimeout(() => setNewTaskId(null), 1200);
+      return () => clearTimeout(timeout);
+    }
+  }, [newTaskId]);
 
   // Handler for delete action
   const handleDelete = async (taskId: string) => {
@@ -207,7 +224,7 @@ export default function TaskList({
         </div>
         {/* Add Task (right) */}
         <div className="flex-1 flex justify-end min-w-[260px]">
-          <AddTaskForm createTaskAction={createTaskAction} />
+          <AddTaskForm createTaskAction={createTaskAction} setNewTaskId={setNewTaskId} />
         </div>
       </div>
       {/* Task Items */}
@@ -220,7 +237,7 @@ export default function TaskList({
           sortedTasks.map((task: Task) => (
             <div
               key={task.id}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150"
+              className={`bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center justify-between hover:shadow-md transition-shadow duration-150 ${newTaskId === task.id ? 'ring-2 ring-yellow-300 bg-yellow-50 transition-all duration-700' : ''}`}
               data-testid={`task-item-${task.id}`}
               data-task-id={task.id}
               style={{ transition: 'background 0.2s', cursor: 'pointer' }}
