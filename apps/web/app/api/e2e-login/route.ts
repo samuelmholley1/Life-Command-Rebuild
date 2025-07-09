@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
+  // --- ADD DEBUG LOGGING HERE ---
+  console.log('--- E2E Login API Route Called ---');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('Supabase URL Loaded:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log('Supabase Anon Key Loaded:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Yes' : 'No');
+  // --- END DEBUG LOGGING ---
+
   if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
