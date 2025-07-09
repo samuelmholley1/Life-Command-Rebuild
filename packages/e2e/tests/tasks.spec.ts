@@ -59,25 +59,26 @@ test.describe('Task Management', () => {
     const updatedTitle = `Updated Task Title - ${timestamp}`;
     // Create a new unique task and get its id
     const taskId = await createTask(page, originalTitle);
-    // Locate the specific task item by stable data-task-id
-    const taskItem = page.locator('[data-testid="task-item"][data-task-id="' + taskId + '"]');
+    // Locate the specific task item by stable data-testid
+    const taskItem = page.getByTestId(`task-item-${taskId}`);
     // Click the task title span to activate inline editing
-    await taskItem.locator('span').click();
+    await taskItem.getByTestId('task-title').click();
     // Find the input for editing by test id and data-task-id
-    const editInput = page.locator('input[data-testid="edit-title-input"][data-task-id="' + taskId + '"]');
+    const editInput = taskItem.getByTestId('edit-title-input');
     await expect(editInput).toBeVisible();
     // Clear and type the new title
     await editInput.fill(updatedTitle);
     // Press Enter to save
     await editInput.press('Enter');
-    // Assert that the old title is no longer visible
-    await expect(page.getByText(originalTitle)).not.toBeVisible();
-    // Assert that the new title is visible
-    await expect(page.getByText(updatedTitle)).toBeVisible();
+    // Assert that the old title is no longer visible in this task item
+    await expect(taskItem.getByText(originalTitle)).not.toBeVisible();
+    // Assert that the new title is visible in this task item
+    await expect(taskItem.getByText(updatedTitle)).toBeVisible();
     // Reload the page
     await page.reload();
-    // Assert that the new title is still visible after reload
-    await expect(page.getByText(updatedTitle)).toBeVisible();
+    // Assert that the new title is still visible after reload in the correct task item
+    const reloadedTaskItem = page.getByTestId(`task-item-${taskId}`);
+    await expect(reloadedTaskItem.getByText(updatedTitle)).toBeVisible();
   });
 
   test('allows a user to set and persist a due date for a task', async ({ page }) => {
