@@ -163,44 +163,51 @@ export default function TaskList({
 
   return (
     <div>
-      {/* Filter Controls */}
-      <div className="flex flex-wrap items-center gap-2 mb-6 p-4 bg-white rounded-lg shadow-sm">
-        <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
-        <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
-          onClick={() => setFilter('all')}
-          type="button"
-        >
-          All
-        </button>
-        <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
-          onClick={() => setFilter('active')}
-          type="button"
-        >
-          Active
-        </button>
-        <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
-          onClick={() => setFilter('completed')}
-          type="button"
-        >
-          Completed
-        </button>
-        {/* Sorting Controls */}
-        <div className="ml-4 flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">Sort:</span>
-          <select
-            className="px-3 py-2 rounded-md border border-gray-300 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 hover:bg-gray-50"
-            value={sort}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSort(e.target.value as "newest" | "oldest" | "az" | "za")}
-            aria-label="Sort tasks"
+      {/* Top Controls: Add Task (right), Filter/Sort (left) */}
+      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+        {/* Filter/Sort Controls (left) */}
+        <div className="flex flex-wrap items-center gap-2 p-4 bg-white rounded-lg shadow-sm">
+          <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
+          <button
+            className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            onClick={() => setFilter('all')}
+            type="button"
           >
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-            <option value="az">A-Z</option>
-            <option value="za">Z-A</option>
-          </select>
+            All
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            onClick={() => setFilter('active')}
+            type="button"
+          >
+            Active
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            onClick={() => setFilter('completed')}
+            type="button"
+          >
+            Completed
+          </button>
+          {/* Sorting Controls */}
+          <div className="ml-4 flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">Sort:</span>
+            <select
+              className="px-3 py-2 rounded-md border border-gray-300 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 hover:bg-gray-50"
+              value={sort}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSort(e.target.value as "newest" | "oldest" | "az" | "za")}
+              aria-label="Sort tasks"
+            >
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="az">A-Z</option>
+              <option value="za">Z-A</option>
+            </select>
+          </div>
+        </div>
+        {/* Add Task (right) */}
+        <div className="flex-1 flex justify-end min-w-[260px]">
+          <AddTaskForm createTaskAction={createTaskAction} />
         </div>
       </div>
       {/* Task Items */}
@@ -348,7 +355,6 @@ export default function TaskList({
           ))
         )}
       </div>
-      <AddTaskForm createTaskAction={createTaskAction} />
     </div>
   );
 }
