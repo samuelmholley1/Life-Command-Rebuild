@@ -16,23 +16,31 @@ interface TaskListProps {
 
 const PRIORITY_LABELS = ['None', 'Low', 'Medium', 'High', 'Critical'];
 
+// Autofocus the Add Task input for quick entry
 function AddTaskForm({
   createTaskAction,
 }: {
   createTaskAction: (formData: FormData) => Promise<void>;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   async function action(formData: FormData) {
     await createTaskAction(formData);
     await queryClient.invalidateQueries({ queryKey: ["tasks"] });
     formRef.current?.reset();
+    inputRef.current?.focus(); // Refocus after adding
   }
 
   return (
     <form ref={formRef} action={action} className="flex gap-2 mb-6">
       <input
+        ref={inputRef}
         type="text"
         name="title"
         placeholder="New task title"
