@@ -59,7 +59,7 @@ Your decision to start with a professional-grade monorepo and a relational schem
 ## July 2025: AI API, Service Layer, and Build Reliability
 - **AI Programmatic API:** `/api/commands` endpoint for automation/AI, requires both API key and user JWT, always respects user security (RLS).
 - **Service Layer:** All business logic is centralized in `core-logic/taskService.ts` and reused by both UI and API for consistency and security.
-- **Vercel Build Fix:** `vercel.json` now ensures core-logic is built before the web app, matching local build order and preventing deployment errors.
+- **Vercel Build Reliability:** Persistent build failures caused by a misplaced test file in `core-logic` have been resolved. All aggressive workarounds (pre-build.sh, VERCEL_BUILD_NO_TYPECHECK, etc.) have been reverted. The build is now clean, type-safe, and reliable. See `COMMANDS.md` for protocol.
 - **Testing:** All E2E and unit tests must be run in terminal. All tests pass in Chromium, Firefox, and Webkit.
 - **Docs:** All foundational docs are now the project brain for non-coders and engineers alike.
 

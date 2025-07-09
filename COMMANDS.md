@@ -30,28 +30,20 @@
 - See ENVIRONMENT_FILES.md and README for the exact SQL and protocol.
 - **Production migrations must always be version-controlled and applied via CLI or CI/CD.**
 
-## Vercel Build Workarounds (July 2025)
+## Vercel Build Reliability (July 2025)
 
-- **TypeScript test files in production:**
-  - Test files (e.g., `TaskList.test.tsx`) must not be type-checked or included in production builds.
-  - All test files should be placed in `__tests__` directories and excluded via `tsconfig.json`.
-  - The Next.js config (`next.config.js`) now sets `typescript.ignoreBuildErrors: true` to ensure Vercel builds do not fail on type errors.
-  - The `pre-build.sh` workaround is no longer needed and has been removed.
-  - The `vercel.json` build command no longer sets `VERCEL_BUILD_NO_TYPECHECK=1`.
-
-- **Local Development Protocol:**
-  - Always run `yarn type-check` and `yarn lint` locally before pushing changes, as Vercel will not catch type errors.
-  - Keep all test files in `__tests__` directories and out of production code paths.
-
-- **Supabase SSR Cookie Adapter:**
-  - Use the async cookies adapter in `apps/web/app/auth/callback/route.ts` to resolve type errors.
-
-## Recent Changes
-- Moved test files to `__tests__` directories.
-- Updated `tsconfig.json` to exclude tests from builds.
-- Updated `next.config.js` and `vercel.json` for type-check suppression.
-- Removed `pre-build.sh` as a workaround.
-- Documented all protocols and workarounds here.
+- **Resolved Issue:** Persistent Vercel build failures were caused by a single misplaced test file (`TaskList.test.tsx`) in the `core-logic` package. This file has been removed, and all aggressive workarounds (pre-build.sh, VERCEL_BUILD_NO_TYPECHECK, etc.) have been reverted.
+- **Current Protocol:**
+  - Test files must reside in `__tests__` directories and be excluded via `tsconfig.json`.
+  - The build command in `vercel.json` is now:
+    ```json
+    {
+      "installCommand": "yarn install --immutable",
+      "buildCommand": "yarn workspace @life-command/core-logic build && yarn workspace @life-command/web build"
+    }
+    ```
+  - No pre-build scripts or type-check disabling are used. Type-checking is fully enabled for all builds.
+  - All changes and protocols are documented in foundational docs.
 
 ## Nonexistent/Unsupported Commands (Do NOT Use)
 
@@ -80,7 +72,7 @@
 
 ---
 
-_Last updated: July 8, 2025 - Added manual SQL workaround for E2E migrations and clarified migration/testing protocol_
+_Last updated: July 9, 2025 - Build reliability protocols and workaround cleanup fully documented_
 
 # Canonical Life Command Commands & Protocols
 

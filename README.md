@@ -73,7 +73,7 @@ packages/
 See `COMMANDS.md` for the canonical, up-to-date list. Any changes must be reflected there and in this README.
 
 **Unsupported commands:**
-- `pnpm ...`, `bun ...`, `yarn workspace @life-command/e2e test`, VS Code test runners, or integrated test tools (not supported)
+- `pnpm ...`, `bun ...`, `yarn workspace @life-command/e2e test`, VS Code test runners, or integrated tools (not supported)
 - Do **not** use `yarn` without the `workspace` flag for app scripts
 - Do **not** use `npm`, `npx`, or `pnpm` except for running tests
 
@@ -120,6 +120,7 @@ See `ENVIRONMENT_FILES.md` for more details and usage instructions.
 - Centralized all task-related Zod schemas in `task-schema.ts`
 - All E2E and unit tests now pass in Chromium, Firefox, and Webkit
 - All foundational docs are now the project brain for non-coders and engineers alike
+- **July 2025:** Persistent Vercel build failures caused by a misplaced test file in `core-logic` have been resolved. All aggressive workarounds (pre-build.sh, VERCEL_BUILD_NO_TYPECHECK, etc.) have been reverted. The build is now clean, type-safe, and reliable. See `COMMANDS.md` for protocol.
 
 ---
 
@@ -129,7 +130,7 @@ For more details, see `APP_FUNCTIONALITY_OVERVIEW.md` and `PROJECT_CONTEXT.md`.
 
 # README
 
-_Last updated: July 8, 2025_
+_Last updated: July 9, 2025_
 
 ## Project Overview
 - Task management with due dates and priority levels
@@ -152,6 +153,7 @@ _Last updated: July 8, 2025_
 ## Status
 - Task Priority Levels: Code, UI, docs, and unit tests complete; E2E tests blocked until manual migration is applied
 - Due Dates: Fully integrated and tested
+- **Build Reliability:** All Vercel build workarounds have been removed. The build is now clean, type-safe, and reliable. See `COMMANDS.md` for protocol.
 
 ---
 
