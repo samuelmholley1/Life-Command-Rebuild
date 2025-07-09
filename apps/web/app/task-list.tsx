@@ -159,21 +159,21 @@ export default function TaskList({
       <div className="flex flex-wrap items-center gap-2 mb-6 p-4 bg-white rounded-lg shadow-sm">
         <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
         <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'all' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('all')}
           type="button"
         >
           All
         </button>
         <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'active' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('active')}
           type="button"
         >
           Active
         </button>
         <button
-          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+          className={`px-4 py-2 rounded-md font-bold cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-150 ${filter === 'completed' ? 'bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-700 shadow' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
           onClick={() => setFilter('completed')}
           type="button"
         >
